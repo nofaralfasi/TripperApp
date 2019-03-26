@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="toolBarLineBackground">#ff33b5e5</color>
+    <color name="notificationBackground">#ff33b5e5</color>
+    <color name="tripListDividerColor">#d1d1d1</color>
+    <color name="landmarkTimelineLineColor">#2196f3</color>
+
+    <color name="tripTimelineLineColor">#2196f3</color>
+
+    <color name="primary">#3F51B5</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="accent">#7C4DFF</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
+
+    <color name="background">#def9f7</color>
+    <color name="background2">#f2f8fd</color>
+    <color name="background3">#2196f3</color>
+
+    <color name="hint">#BDBDBD</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="auto_complete_map_background">#FFFFFF</color>
+
+    <color name="expandPhotoArrowBackground">#90212121</color>
+</resources>

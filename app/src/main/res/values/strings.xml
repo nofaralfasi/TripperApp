@@ -1,0 +1,176 @@
+<resources>
+    <string name="app_name">TripperApp</string>
+    <string name="unsaved_details_warning_dialog_back_label">Yes</string>
+    <string name="unsaved_details_warning_dialog_cancel_label">No</string>
+    <string name="unsaved_details_warning_dialog_title">Unsaved Details</string>
+    <string name="unsaved_details_warning_dialog_message">Are you sure you want to go back without saving?</string>
+    <string name="description_dialog_done">Done</string>
+    <string name="description_dialog_cancel">Cancel</string>
+    <string name="description_dialog_title">Enter Description</string>
+    <string name="trip_create_title_title">Title</string>
+    <string name="trip_create_title_start_date">Start Date</string>
+    <string name="trip_create_details_description_text">Description</string>
+    <string name="trip_create_details_place_text">Place</string>
+    <string name="trip_create_details_photo_text">Photo</string>
+    <string name="trip_no_title_error_message">"Enter trip title"</string>
+    <string name="trip_update_title">Title</string>
+    <string name="trip_update_start_date">Start Date</string>
+    <string name="trip_update_end_date">End Date</string>
+    <string name="trip_update_description_text">Description</string>
+    <string name="trip_update_place_text">Place</string>
+    <string name="trip_update_photo_text">Photo</string>
+    <string name="trip_view_details_toolbar_title">Trip details</string>
+    <string name="trip_create_new_trip_toolbar_title">Create new trip</string>
+    <string name="trip_update_trip_toolbar_title">Update trip</string>
+    <string name="trip_view_details_menu_item_title">Trip Details</string>
+    <string name="trip_map_view_menu_item_title">Map View</string>
+    <string name="trip_update_details_menu_item_title">Update Trip</string>
+    <string name="show_quick_landmarks_option_item_title">Show Quick Landmarks</string>
+    <string name="hide_quick_landmarks_option_item_title">Hide Quick Landmarks</string>
+    <string-array name="trips_settings_dialog_options">
+        <item>View</item>
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+
+    <string name="trip_photo_dialog">Change Picture</string>
+    <string-array name="trip_photo_dialog_options">
+        <item>Choose From Gallery</item>
+        <item>Take A Photo</item>
+    </string-array>
+
+    <string name="trip_options_dialog_title">Trip Options</string>
+    <string name="trip_delete_warning_dialog_message">Are you sure you want to delete this trip?</string>
+    <string name="trip_delete_warning_dialog_title">Delete Trip</string>
+    <string name="trip_delete_warning_dialog_delete_label">Delete</string>
+    <string name="trip_delete_warning_dialog_cancel_label">Cancel</string>
+    <string name="no_trips_dialog_title">No Trip Was Added</string>
+    <string name="no_trips_dialog_message">Please enter a title for your new trip:</string>
+    <string name="trips_add_trips_when_empty_message">Add your\nfirst Trip</string>
+
+    <string name="landmarks_add_trips_when_empty_message">Add your\nfirst Landmark</string>
+
+    <string name="landmarks_no_search_results_message">No results found</string>
+
+    <string name="parent_trip_message">destination will be added to </string>
+    <string name="toast_no_trips_dialog_canceled_message">You must create a trip first</string>
+    <string name="toast_landmark_added_from_gallery_no_permission">Permission denied</string>
+    <string name="toast_add_landmark_progress_dialog_title">Please Wait</string>
+    <string name="toast_add_landmark_progress_dialog_message">Adding chosen photos...</string>
+
+    <string name="toast_location_landmark_added_message_success">Landmark %1$s added to %2$s</string>
+    <string name="toast_location_is_off_massage">Turn on location to for quick location landmarks</string>
+    <string name="toast_widget_location_utils_open_massage">Getting your location...</string>
+    <string name="toast_widget_location_utils_open_title">Please Wait</string>
+    <string name="toast_widget_location_open_massage">Getting your location name...</string>
+    <string name="toast_widget_location_cancel_button">Cancel</string>
+    <string name="location_landmark_default_title">My Widget Location</string>
+    <string name="location_widget_name">KeepLocations</string>
+
+    <string name="toast_landmark_added_message_success">Landmark added successfully</string>
+    <string name="toast_landmarks_added_message_success">Landmarks added to %1$s</string>
+    <string name="toast_trip_added_message">Trip added successfully</string>
+    <string name="toast_landmark_added_message_fail">Something went wrong, try again</string>
+    <string name="toast_landmark_location_sample">"Your GPS location was saved: latitude: %1$s longitude: %2$s </string>
+    <string name="toast_something_went_wrong">Something went wrong, try again</string>
+
+    <string name="landmark_view_details_toolbar_title">Landmark details</string>
+    <string name="landmark_create_new_landmark_toolbar_title">Create new destination</string>
+    <string name="landmark_update_landmark_toolbar_title">Update destination</string>
+    <string name="landmark_update_details_menu_item_title">Update Landmark</string>
+
+    <string-array name="landmarks_settings_dialog_options">
+        <item>View</item>
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+
+    <string name="landmark_details_photo_dialog">Change Picture</string>
+    <string-array name="landmark_details_photo_dialog_options">
+        <item>Choose From Gallery</item>
+        <item>Take A Photo</item>
+    </string-array>
+
+    <string name="landmark_options_dialog_title">Landmark Options</string>
+    <string name="landmark_delete_warning_dialog_message">Are you sure you want to delete this destination?</string>
+    <string name="landmark_multiple_delete_warning_dialog_message">Are you sure you want to delete these landmarks?</string>
+    <string name="landmark_delete_warning_dialog_title">Delete Landmark</string>
+    <string name="landmark_multiple_delete_warning_dialog_title">Delete Landmarks</string>
+    <string name="landmark_delete_warning_dialog_delete_label">Delete</string>
+    <string name="landmark_delete_warning_dialog_cancel_label">Cancel</string>
+
+    <string name="landmark_details_title_text">Title</string>
+    <string name="landmark_details_photo_text">Photo</string>
+    <string name="landmark_details_date_text">Date</string>
+    <string name="landmark_details_automatic_location_text">Location</string>
+    <string name="landmark_details_automatic_location_loading_text">Finding location</string>
+    <string name="landmark_details_location_description_text">Location Description</string>
+    <string name="landmark_details_type_text">Type</string>
+    <string name="landmark_details_description_text">Description</string>
+    <string name="landmark_details_button_done_text">Done!</string>
+    <string name="fragment_landmark_details_edit_item">fragment_landmark_details_edit_item"</string>
+
+    <string-array name="landmark_details_type_spinner_array">
+        <item> </item>
+        <item>Hotel</item>
+        <item>Attraction</item>
+        <item>Restaurant</item>
+        <item>NightOut</item>
+    </string-array>
+
+    <string name="landmark_no_title_or_photo_error_message">"Enter a title or pick a photo"</string>
+    <string name="landmark_location_is_unavailable">"Location is unavailable"</string>
+    <string name="landmark_sub_gps_no_permissions_message">"\nAllow location by clicking the map icon"</string>
+    <string name="landmark_sub_gps_message">"\nTurn on location or choose a location from the map"</string>
+    <string name="landmark_sub_gps_on_update_message">"\nChoose a location from the map"</string>
+    <string name="landmark_sub_network_message">"\nTo get your location name please connect to the network"</string>
+
+    <string name="no_landmarks_to_view">"No landmarks to view, create a new destination first"</string>
+    <string name="no_landmarks_with_location_found">"No landmarks with location found"</string>
+    <string name="make_sure_gps_enabled_or_map">"Turn on gps or choose location from map while editing a destination"</string>
+    <string name="no_previous_location_mark_map">"No location found, search and long press a map location"</string>
+    <string name="single_map_done_button">Done</string>
+    <string name="single_map_cancel_button">Cancel</string>
+
+    <string name="landmark_gps_location_string">"Latitude: %1$s\nLongitude: %2$s"</string>
+
+    <string name="permission_denied_massage">"Permission denied"</string>
+
+    <string name="location_permission_title">"Location Permission Needed"</string>
+    <string name="location_permission_message">"KeepTrip needs your location permission to view your location on a map"</string>
+    <string name="location_permission_ok">"OK"</string>
+    <string name="title_activity_landmarks_map">Map</string>
+    <string name="title_activity_no_trips_dialog">NoTripsDialogActivity</string>
+
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search</string>
+    <string name="title_activity_landmarks_search_result">search result</string>
+    <string name="results_found_text_view_string">Results found:</string>
+
+    <string name="app_settings_menu_item_title">Settings</string>
+    <string name="app_settings_toolbar_title">Settings</string>
+    <string name="app_settings_switch_notifications_text_title">Quick Landmarks</string>
+    <string name="app_settings_switch_notifications_text_explanation">Enable adding landmarks from
+        notifications window to the most recent trip</string>
+    <string name="app_settings_switch_enable_notifications_no_trips_message">For quick landmarks add a trip</string>
+    <string name="app_settings_hide_notification_dialog_title">Show Warnings</string>
+    <string name="app_settings_hide_notification_dialog_message">You will see a warning popup
+    when you hide quick landmarks window</string>
+
+    <string name="notification_add_landmark">"Add"</string>
+    <string name="notification_added_to_trip_message">"Landmarks will be added to %1$s"</string>
+    <string name="notification_title">Quick Landmarks</string>
+    <string name="notification_hide">Hide</string>
+    <string name="notification_hide_dialog_checkbox_message">"Don't show again"</string>
+    <string name="notification_hide_dialog_title">Hide Quick Landmarks</string>
+    <string name="notification_hide_dialog_message">Are you sure you want to hide quick landmarks option?
+                                                    \n\nYou can re-open it later from your most recent trip</string>
+    <string name="notification_hide_dialog_yes_button">Yes</string>
+    <string name="notification_hide_dialog_no_button">No</string>
+    <string name="notification_disabled_message">Quick landmarks option is disabled</string>
+
+    <string name="multiple_select_menu_item_delete">delete</string>
+    <string name="multiple_select_menu_item_edit">edit</string>
+    <string name="multiple_select_menu_item_view">view</string>
+
+</resources>
