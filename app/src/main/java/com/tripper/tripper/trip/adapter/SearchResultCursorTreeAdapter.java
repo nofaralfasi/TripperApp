@@ -13,14 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.services.myContentProvider;
 import com.tripper.tripper.core.Landmark;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.FormatHtmlText;
-import com.tripper.tripper.views.HighlightTextView;
 import com.tripper.tripper.utils.ImageUtils;
-import com.tripper.tripper.utils.StartActivitiesUtils;
+import com.tripper.tripper.utils.StartActivityUtils;
+import com.tripper.tripper.views.HighlightTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,14 +44,14 @@ public class SearchResultCursorTreeAdapter extends CursorTreeAdapter {
         super(cursor, context, autoRequery);
 
         this.groupExpended = groupExpended;
-        mCallBackOnGetChildrenCursorListener = StartActivitiesUtils.onAttachCheckInterface(fragment, OnGetChildrenCursorListener.class);
+        mCallBackOnGetChildrenCursorListener = StartActivityUtils.onAttachCheckInterface(fragment, OnGetChildrenCursorListener.class);
         this.filter = filter;
     }
 
     @Override
     protected Cursor getChildrenCursor(Cursor groupCursor) {
         int groupPos = groupCursor.getPosition();
-        int groupId = groupCursor.getInt(groupCursor.getColumnIndexOrThrow(myContentProvider.SearchGroups.ID_COLUMN));
+        int groupId = groupCursor.getInt(groupCursor.getColumnIndexOrThrow(MyContentProvider.SearchGroups.ID_COLUMN));
 
         mGroupMap.put(groupId, groupPos);
         mCallBackOnGetChildrenCursorListener.onGetChildrenCursorListener(groupId);
@@ -72,7 +72,7 @@ public class SearchResultCursorTreeAdapter extends CursorTreeAdapter {
         int groupSize = getChildrenCount(cursor.getPosition());
 
         groupSizeTextView.setText(String.valueOf(groupSize));
-        title.setText(cursor.getString(cursor.getColumnIndexOrThrow(myContentProvider.SearchGroups.TITLE_COLUMN)));
+        title.setText(cursor.getString(cursor.getColumnIndexOrThrow(MyContentProvider.SearchGroups.TITLE_COLUMN)));
     }
 
     @Override
@@ -148,7 +148,7 @@ public class SearchResultCursorTreeAdapter extends CursorTreeAdapter {
 
                 final Landmark landmark = new Landmark(cursor);
 
-                String tripTitleString = cursor.getString(cursor.getColumnIndexOrThrow(myContentProvider.SearchLandmarkResults.TRIP_TITLE_COLUMN));
+                String tripTitleString = cursor.getString(cursor.getColumnIndexOrThrow(MyContentProvider.SearchLandmarkResults.TRIP_TITLE_COLUMN));
 
                 tripTitle.setText(FormatHtmlText.setUnderline(tripTitleString));
                 title.setHighlightText(landmark.getTitle(), filter);

@@ -6,16 +6,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.dialogs.ChangesNotSavedDialogFragment;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.dialogs.ChangesNotSavedDialogFragment;
 import com.tripper.tripper.trip.fragment.TripUpdateFragment;
 import com.tripper.tripper.trip.fragment.TripsListFragment;
 import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.trip.interfaces.OnSetCurrentTrip;
-import com.tripper.tripper.utils.DbUtils;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;
-import com.tripper.tripper.utils.StartActivitiesUtils;
+import com.tripper.tripper.utils.StartActivityUtils;
 
 public class TripActivity extends AppCompatActivity implements OnSetCurrentTrip, OnGetCurrentTrip,
         ChangesNotSavedDialogFragment.OnHandleDialogResult {
@@ -41,13 +41,13 @@ public class TripActivity extends AppCompatActivity implements OnSetCurrentTrip,
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        Trip lastTrip = DbUtils.getLastTrip(this);
+        Trip lastTrip = DatabaseUtils.getLastTrip(this);
         if(lastTrip != null && savedInstanceState == null){
             currentTrip = lastTrip;
             if(SharedPreferencesUtils.getIsNotificationsWindowOpen(this)){
                 NotificationUtils.initNotification(this, lastTrip.getTitle());
             }
-            StartActivitiesUtils.startLandmarkMainActivity(this, lastTrip);
+            StartActivityUtils.startLandmarkMainActivity(this, lastTrip);
         }
 
         TripsListFragment tripsListFragment = new TripsListFragment();

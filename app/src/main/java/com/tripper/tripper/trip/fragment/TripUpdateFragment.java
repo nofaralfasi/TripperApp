@@ -32,12 +32,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.services.myContentProvider;
-import com.tripper.tripper.dialogs.DescriptionDialogFragment;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.dialogs.DescriptionDialogFragment;
+import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.DateUtils;
-import com.tripper.tripper.utils.DbUtils;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;
@@ -238,10 +238,10 @@ public class TripUpdateFragment extends Fragment{
 
                     ContentValues contentValues = currentTrip.tripToContentValues();
                     getActivity().getContentResolver().update
-                            (ContentUris.withAppendedId(myContentProvider.CONTENT_TRIP_ID_URI_BASE, currentTrip.getId()), contentValues, null, null);
+                            (ContentUris.withAppendedId(MyContentProvider.CONTENT_TRIP_ID_URI_BASE, currentTrip.getId()), contentValues, null, null);
 
                     // update the notification with new title only if its the last trip
-                    Trip latestTrip = DbUtils.getLastTrip(getActivity());
+                    Trip latestTrip = DatabaseUtils.getLastTrip(getActivity());
                     if(latestTrip != null && (latestTrip.getId() == currentTrip.getId())) {
                         //a new trip is created, so reopen the quick landmark option
                         SharedPreferencesUtils.saveCloseNotificationsState(getActivity(), false);

@@ -15,7 +15,6 @@ import com.tripper.tripper.R;
 
 public class NoTripsDialogFragment extends DialogFragment {
 
-    // tag
     public static final String TAG = NoTripsDialogFragment.class.getSimpleName();
 
     public static final String NO_TRIPS_DIALOG_OPTION = "NO_TRIPS_DIALOG_OPTION";

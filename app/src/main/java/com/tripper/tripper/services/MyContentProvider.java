@@ -17,9 +17,9 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-public class myContentProvider extends ContentProvider{
+public class MyContentProvider extends ContentProvider{
 
-    private final static String TAG = myContentProvider.class.getName();
+    private final static String TAG = MyContentProvider.class.getName();
     private KeepTripSQLiteHelper handler = null;
 
     public class Trips{
@@ -163,7 +163,7 @@ public class myContentProvider extends ContentProvider{
         return true;
     }
 
-    final static private myContentProvider instance = new myContentProvider();
+    final static private MyContentProvider instance = new MyContentProvider();
 
     @Nullable
     @Override

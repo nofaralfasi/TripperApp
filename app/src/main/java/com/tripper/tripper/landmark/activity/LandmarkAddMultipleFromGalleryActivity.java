@@ -17,12 +17,12 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.services.myContentProvider;
-import com.tripper.tripper.dialogs.NoTripsDialogFragment;
 import com.tripper.tripper.core.Landmark;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.dialogs.NoTripsDialogFragment;
+import com.tripper.tripper.services.MyContentProvider;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.DateUtils;
-import com.tripper.tripper.utils.DbUtils;
 import com.tripper.tripper.utils.ImageUtils;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
                 super.onPreExecute();
                 imageUris = multiplePhotosIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                 if (imageUris != null) {
-                    lastTrip = DbUtils.getLastTrip(LandmarkAddMultipleFromGalleryActivity.this);
+                    lastTrip = DatabaseUtils.getLastTrip(LandmarkAddMultipleFromGalleryActivity.this);
                     initProgressDialog(imageUris.size());
                     progressDialog.show();
                 }
@@ -140,7 +140,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
 
                         // Insert data to DataBase
                         getContentResolver().insert(
-                                myContentProvider.CONTENT_LANDMARKS_URI,
+                                MyContentProvider.CONTENT_LANDMARKS_URI,
                                 newLandmark.landmarkToContentValues());
 
                     }
@@ -174,7 +174,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
 
     private void handleSendMultipleImages() {
 
-        Trip currentTrip = DbUtils.getLastTrip(this);
+        Trip currentTrip = DatabaseUtils.getLastTrip(this);
         if(currentTrip == null){
             NoTripsDialogFragment dialogFragment = new NoTripsDialogFragment();
 
@@ -193,7 +193,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
 //    private void handleLandmarksFromGalleryWhenThereAreTrips() {
 //        ArrayList<Uri> imageUris = multiplePhotosIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
 //        if (imageUris != null) {
-//            Trip lastTrip = DbUtils.getLastTrip(this);
+//            Trip lastTrip = DatabaseUtils.getLastTrip(this);
 //            progressDialog.show();
 //            for (int i = 0; i < imageUris.size(); i++) {
 //                String currentImagePath = ImageUtils.getRealPathFromURI(this, imageUris.get(i));
@@ -205,7 +205,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
 //
 //                // Insert data to DataBase
 //                getContentResolver().insert(
-//                        myContentProvider.CONTENT_LANDMARKS_URI,
+//                        MyContentProvider.CONTENT_LANDMARKS_URI,
 //                        newLandmark.landmarkToContentValues());
 //            }
 //            progressDialog.dismiss();
@@ -238,7 +238,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
         switch (whichOptionEnum){
             case DONE:
                 Trip newTrip = new Trip(newTripTitle, Calendar.getInstance().getTime(), "", "", "");
-                DbUtils.addNewTrip(this, newTrip);
+                DatabaseUtils.addNewTrip(this, newTrip);
 
 //                handleLandmarksFromGalleryWhenThereAreTrips();
                 createAddMultipleLandmarksTask();

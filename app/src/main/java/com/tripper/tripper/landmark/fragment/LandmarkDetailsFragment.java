@@ -8,28 +8,29 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.database.SQLException;
+import android.location.Location;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.support.v13.app.FragmentCompat;
-import android.content.ContentUris;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
@@ -47,7 +48,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.support.design.widget.FloatingActionButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -60,23 +60,22 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
-import com.tripper.tripper.services.myContentProvider;
-import com.tripper.tripper.dialogs.DescriptionDialogFragment;
-import com.tripper.tripper.dialogs.NoTripsDialogFragment;
-import com.tripper.tripper.landmark.activity.LandmarkSingleMap;
-import com.tripper.tripper.landmark.interfaces.OnGetCurrentLandmark;
-import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.R;
-import com.tripper.tripper.landmark.activity.LandmarkMainActivity;
 import com.tripper.tripper.core.Landmark;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.dialogs.DescriptionDialogFragment;
+import com.tripper.tripper.dialogs.NoTripsDialogFragment;
+import com.tripper.tripper.landmark.activity.LandmarkMainActivity;
+import com.tripper.tripper.landmark.activity.LandmarkSingleMap;
+import com.tripper.tripper.landmark.interfaces.OnGetCurrentLandmark;
+import com.tripper.tripper.services.MyContentProvider;
+import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.DateUtils;
-import com.tripper.tripper.utils.DbUtils;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.LocationUtils;
 import com.tripper.tripper.utils.NotificationUtils;
-import com.tripper.tripper.utils.StartActivitiesUtils;
+import com.tripper.tripper.utils.StartActivityUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -262,7 +261,7 @@ public class LandmarkDetailsFragment extends Fragment implements
                 if(args != null) {
                     if(args.getString(NotificationUtils.NOTIFICATION_ADD_LANDMARK_ACTION_STR) != null){
                         isCalledFromNotification = true;
-                        currentTrip = DbUtils.getLastTrip(getActivity());
+                        currentTrip = DatabaseUtils.getLastTrip(getActivity());
                         updateParentTripMessage();
                     }else {
                         currentLmPhotoPath = args.getString(LandmarkMainActivity.IMAGE_FROM_GALLERY_PATH);
@@ -300,7 +299,7 @@ public class LandmarkDetailsFragment extends Fragment implements
     private void handleLandmarkFromGallery(){
         ImageUtils.updatePhotoImageViewByPath(getActivity(), currentLmPhotoPath, lmPhotoImageView);
 
-        currentTrip = DbUtils.getLastTrip(getActivity());
+        currentTrip = DatabaseUtils.getLastTrip(getActivity());
         if(currentTrip == null){
             NoTripsDialogFragment dialogFragment = new NoTripsDialogFragment();
             dialogFragment.setTargetFragment(LandmarkDetailsFragment.this, NO_TRIPS_DIALOG);
@@ -459,7 +458,7 @@ public class LandmarkDetailsFragment extends Fragment implements
 
                         // Update the DataBase with the edited landmark
                         getActivity().getContentResolver().update(
-                                ContentUris.withAppendedId(myContentProvider.CONTENT_LANDMARK_ID_URI_BASE, finalLandmark.getId()),
+                                ContentUris.withAppendedId(MyContentProvider.CONTENT_LANDMARK_ID_URI_BASE, finalLandmark.getId()),
                                 finalLandmark.landmarkToContentValues(),
                                 null,
                                 null);
@@ -568,7 +567,7 @@ public class LandmarkDetailsFragment extends Fragment implements
         try {
             // Insert data to DataBase
             getActivity().getContentResolver().insert(
-                    myContentProvider.CONTENT_LANDMARKS_URI,
+                    MyContentProvider.CONTENT_LANDMARKS_URI,
                     finalLandmark.landmarkToContentValues());
 
             if(DateUtils.isFirstLaterThanSecond(lmCurrentDate, currentTrip.getEndDate())){
@@ -758,7 +757,7 @@ public class LandmarkDetailsFragment extends Fragment implements
                             String title = data.getStringExtra(NoTripsDialogFragment.TITLE_FROM_NO_TRIPS_DIALOG);
                             Trip newTrip = new Trip(title, Calendar.getInstance().getTime(), "", "", "");
 
-                            int tripId = DbUtils.addNewTrip(getActivity(), newTrip);
+                            int tripId = DatabaseUtils.addNewTrip(getActivity(), newTrip);
                             newTrip.setId(tripId);
                             currentTrip = newTrip;
 
@@ -1293,9 +1292,9 @@ public class LandmarkDetailsFragment extends Fragment implements
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
-        mCallback = StartActivitiesUtils.onAttachCheckInterface(activity, OnGetCurrentLandmark.class);
-        mCallbackGetCurTrip = StartActivitiesUtils.onAttachCheckInterface(activity, OnGetCurrentTrip.class);
-        mCallbackOnLandmarkAddedListener = StartActivitiesUtils.onAttachCheckInterface(activity, OnLandmarkAddedListener.class);
+        mCallback = StartActivityUtils.onAttachCheckInterface(activity, OnGetCurrentLandmark.class);
+        mCallbackGetCurTrip = StartActivityUtils.onAttachCheckInterface(activity, OnGetCurrentTrip.class);
+        mCallbackOnLandmarkAddedListener = StartActivityUtils.onAttachCheckInterface(activity, OnLandmarkAddedListener.class);
     }
 
     //--------------helper methods--------//
@@ -1307,9 +1306,9 @@ public class LandmarkDetailsFragment extends Fragment implements
 
     private void updateTripEndDate(int tripId, Date newEndDate){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(myContentProvider.Trips.END_DATE_COLUMN, DateUtils.databaseDateToString(newEndDate));
+        contentValues.put(MyContentProvider.Trips.END_DATE_COLUMN, DateUtils.databaseDateToString(newEndDate));
         getActivity().getContentResolver().update
-                (ContentUris.withAppendedId(myContentProvider.CONTENT_TRIP_ID_URI_BASE, tripId), contentValues, null, null);
+                (ContentUris.withAppendedId(MyContentProvider.CONTENT_TRIP_ID_URI_BASE, tripId), contentValues, null, null);
         currentTrip.setEndDate(newEndDate);
     }
 

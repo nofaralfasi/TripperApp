@@ -12,12 +12,12 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.services.myContentProvider;
-import com.tripper.tripper.dialogs.NoTripsDialogFragment;
 import com.tripper.tripper.core.Landmark;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.dialogs.NoTripsDialogFragment;
+import com.tripper.tripper.services.MyContentProvider;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.DateUtils;
-import com.tripper.tripper.utils.DbUtils;
 import com.tripper.tripper.utils.LocationUtils;
 import com.tripper.tripper.utils.LocationUtilsActivity;
 
@@ -39,7 +39,7 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
         }
         initProgressDialog();
 
-        Trip lastTrip = DbUtils.getLastTrip(this);
+        Trip lastTrip = DatabaseUtils.getLastTrip(this);
         if(lastTrip == null){
             NoTripsDialogFragment dialogFragment = new NoTripsDialogFragment();
 
@@ -81,7 +81,7 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
     }
 
     private void addLocationLandmark() {
-        Trip lastTrip = DbUtils.getLastTrip(this);
+        Trip lastTrip = DatabaseUtils.getLastTrip(this);
         if(lastTrip != null) {
         //    Location currentLocation = new LocationUtils().getCurrentLocation(this);
             Location currentLocation = new Location("");
@@ -97,7 +97,7 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
         switch (whichOptionEnum){
             case DONE:
                 Trip newTrip = new Trip(newTripTitle, Calendar.getInstance().getTime(), "", "", "");
-                DbUtils.addNewTrip(this, newTrip);
+                DatabaseUtils.addNewTrip(this, newTrip);
                 addLocationLandmark();
                 break;
             case CANCEL:
@@ -127,14 +127,14 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
 
     private void completeAdding(String currentLocationName, Location currentLocation){
 //        String currentLocationName = LocationUtils.updateLmLocationString(this, currentLocation);
-        Trip lastTrip = DbUtils.getLastTrip(this);
+        Trip lastTrip = DatabaseUtils.getLastTrip(this);
         String title = (currentLocationName == null || currentLocationName.trim().isEmpty()) ? getResources().getString(R.string.location_landmark_default_title) : currentLocationName;
         Landmark newLandmark = new Landmark(lastTrip.getId(), title,
                 "", DateUtils.getDateOfToday(), currentLocationName, currentLocation, "", "", 0);
 
         // Insert data to DataBase
         getContentResolver().insert(
-                myContentProvider.CONTENT_LANDMARKS_URI,
+                MyContentProvider.CONTENT_LANDMARKS_URI,
                 newLandmark.landmarkToContentValues());
 
         Toast.makeText(this, getResources().getString(R.string.toast_location_landmark_added_message_success, title, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();

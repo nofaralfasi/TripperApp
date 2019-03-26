@@ -8,18 +8,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tripper.tripper.R;
+import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.dialogs.ChangesNotSavedDialogFragment;
 import com.tripper.tripper.landmark.fragment.LandmarkDetailsFragment;
 import com.tripper.tripper.landmark.fragment.LandmarksListFragment;
 import com.tripper.tripper.landmark.interfaces.OnGetCurrentLandmark;
 import com.tripper.tripper.landmark.interfaces.OnGetCurrentTripId;
-import com.tripper.tripper.core.Landmark;
-import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.trip.fragment.TripUpdateFragment;
 import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.utils.ImageUtils;
-import com.tripper.tripper.utils.StartActivitiesUtils;
 import com.tripper.tripper.utils.NotificationUtils;
+import com.tripper.tripper.utils.StartActivityUtils;
 
 public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurrentTripId,
         OnGetCurrentLandmark, OnGetCurrentTrip, LandmarksListFragment.OnSetCurrentLandmark, LandmarksListFragment.GetCurrentTripTitle,
@@ -78,7 +78,7 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
                 }
             } else {
                 currentTrip = intent.getParcelableExtra(CURRENT_TRIP_PARAM);
-                moveToLandmarkId = intent.getIntExtra(CURRENT_LANDMARK_ID_PARAM, StartActivitiesUtils.NOT_JUMP_TO_LANDMARK_ID);
+                moveToLandmarkId = intent.getIntExtra(CURRENT_LANDMARK_ID_PARAM, StartActivityUtils.NOT_JUMP_TO_LANDMARK_ID);
 
                 if (findViewById(R.id.landmark_main_fragment_container) != null) {
                     if (getFragmentManager().findFragmentById(R.id.landmark_main_fragment_container) == null) {
@@ -189,7 +189,7 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
     @Override
     public int onGetMoveToLandmarkId() {
         int res = moveToLandmarkId;
-        moveToLandmarkId = StartActivitiesUtils.NOT_JUMP_TO_LANDMARK_ID;
+        moveToLandmarkId = StartActivityUtils.NOT_JUMP_TO_LANDMARK_ID;
         return res;
     }
 

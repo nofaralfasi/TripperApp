@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -22,16 +23,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.net.Uri;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.dialogs.DescriptionDialogFragment;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.dialogs.DescriptionDialogFragment;
 import com.tripper.tripper.trip.activity.CreateTripActivity;
-import com.tripper.tripper.utils.DbUtils;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;
@@ -133,7 +133,7 @@ public class TripCreateDetailsFragment extends Fragment {
             Trip currentTrip = ((CreateTripActivity)tripCreateParentActivity).currentCreatedTrip;
             Trip newTrip = new Trip(currentTrip.getTitle().trim(), currentTrip.getStartDate(), tripPlaceEditText.getText().toString().trim(), tripPhotoPath, tripDescriptionEditText.getText().toString().trim());
 
-            int tripId = DbUtils.addNewTrip(getActivity(), newTrip);
+            int tripId = DatabaseUtils.addNewTrip(getActivity(), newTrip);
 
             //TODO: MAKE SURE IT'S O.K
             newTrip.setId(tripId);
@@ -144,7 +144,7 @@ public class TripCreateDetailsFragment extends Fragment {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_trip_added_message), Toast.LENGTH_LONG).show();
 
             // update the notification with new title only if its the last trip
-            Trip latestTrip = DbUtils.getLastTrip(getActivity());
+            Trip latestTrip = DatabaseUtils.getLastTrip(getActivity());
             if( (latestTrip != null && latestTrip.getId() == tripId)) {
                 //a new trip is created, so reopen the quick landmark option
                 SharedPreferencesUtils.saveCloseNotificationsState(getActivity(), false);

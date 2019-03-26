@@ -2,14 +2,14 @@ package com.tripper.tripper.utils;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.helpers.NotificationCancelActivity;
+import com.tripper.tripper.helpers.CancelNotificationActivity;
 import com.tripper.tripper.landmark.activity.LandmarkMainActivity;
 
 /**
@@ -54,7 +54,7 @@ public class NotificationUtils {
 
 
         // Intent for cancel notification action
-        Intent resultIntentCancelNotification = new Intent(context, NotificationCancelActivity.class);
+        Intent resultIntentCancelNotification = new Intent(context, CancelNotificationActivity.class);
         resultIntentCancelNotification.setAction(NOTIFICATION_HIDE_ACTION_STR);
         resultIntentCancelNotification.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         resultIntentCancelNotification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

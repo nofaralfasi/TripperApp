@@ -10,25 +10,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.tripper.tripper.R;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.tripper.tripper.R;
-
 public class LocationUtils{
 
-    // Landmark Location Defines
     public final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
     public static String updateLmLocationString(Activity activity, Location location){
         String locationName = null;
         if (IsNetworkEnabled(activity) && location != null) {
             Geocoder gcd = new Geocoder(activity, Locale.getDefault());
-            try { //TODO: lat and lng will be 0 if nothing has changed when location isn't on (and not returning null)
+            try {
                 List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 if (addresses.size() > 0) {
                     Address ad = addresses.get(0);
@@ -69,9 +68,7 @@ public class LocationUtils{
         return locationString;
     }
 
-    /**
-     * Method to verify google play services on the device
-     * */
+
     public static boolean checkPlayServices(Activity activity, boolean withMessage) {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(activity);

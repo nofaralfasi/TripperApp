@@ -40,19 +40,19 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.services.myContentProvider;
-import com.tripper.tripper.helpers.SettingsActivity;
 import com.tripper.tripper.core.Landmark;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.helpers.SettingsActivity;
+import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.trip.activity.CreateTripActivity;
 import com.tripper.tripper.trip.adapter.SearchResultCursorTreeAdapter;
 import com.tripper.tripper.trip.interfaces.OnSetCurrentTrip;
 import com.tripper.tripper.utils.AnimationUtils;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.DateUtils;
-import com.tripper.tripper.utils.DbUtils;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.NotificationUtils;
-import com.tripper.tripper.utils.StartActivitiesUtils;
+import com.tripper.tripper.utils.StartActivityUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -186,7 +186,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
                 mSetCurrentTripCallback.onSetCurrentTrip(currentTrip);
 
                 Activity curActivity = (Activity) view.getContext();
-                StartActivitiesUtils.startLandmarkMainActivity(curActivity, currentTrip);
+                StartActivityUtils.startLandmarkMainActivity(curActivity, currentTrip);
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -214,7 +214,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 return new CursorLoader(getActivity(),
-                        myContentProvider.CONTENT_TRIPS_URI,
+                        MyContentProvider.CONTENT_TRIPS_URI,
                         null,
                         null,
                         null,
@@ -276,7 +276,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
                     case SEARCH_LANDMARK_LOADER_ID:
                         selectedLandmark = (Landmark) v.getTag();
                         Cursor tripCursor = activity.getContentResolver().query(
-                                ContentUris.withAppendedId(myContentProvider.CONTENT_TRIP_ID_URI_BASE, selectedLandmark.getTripId()),
+                                ContentUris.withAppendedId(MyContentProvider.CONTENT_TRIP_ID_URI_BASE, selectedLandmark.getTripId()),
                                 null,
                                 null,
                                 null,
@@ -293,9 +293,9 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
                 if (selectedTrip != null) {
                     mSetCurrentTripCallback.onSetCurrentTrip(selectedTrip);
                     if (selectedLandmark != null) {
-                        StartActivitiesUtils.startLandmarkMainActivity(getActivity(), selectedTrip, selectedLandmark.getId());
+                        StartActivityUtils.startLandmarkMainActivity(getActivity(), selectedTrip, selectedLandmark.getId());
                     } else {
-                        StartActivitiesUtils.startLandmarkMainActivity(getActivity(), selectedTrip);
+                        StartActivityUtils.startLandmarkMainActivity(getActivity(), selectedTrip);
                     }
                 }
 
@@ -312,7 +312,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
                 switch (id) {
                     case SEARCH_MAIN_LOADER_ID:
                         loader = new CursorLoader(activity,
-                                myContentProvider.CONTENT_SEARCH_GROUPS_URI,
+                                MyContentProvider.CONTENT_SEARCH_GROUPS_URI,
                                 null,
                                 null,
                                 null,
@@ -320,16 +320,16 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
                         break;
                     case SEARCH_TRIP_LOADER_ID: {
                         String[] columnsToSearch = new String[] {
-                                        myContentProvider.Trips.TITLE_COLUMN,
-                                        myContentProvider.Trips.PLACE_COLUMN,
-                                        myContentProvider.Trips.DESCRIPTION_COLUMN };
+                                        MyContentProvider.Trips.TITLE_COLUMN,
+                                        MyContentProvider.Trips.PLACE_COLUMN,
+                                        MyContentProvider.Trips.DESCRIPTION_COLUMN };
                         String[] searchValues = new String[columnsToSearch.length];
                         Arrays.fill(searchValues, searchValue);
 
                         loader = new CursorLoader(activity,
-                                myContentProvider.CONTENT_TRIPS_URI,
+                                MyContentProvider.CONTENT_TRIPS_URI,
                                 null,
-                                DbUtils.getWhereClause(columnsToSearch),
+                                DatabaseUtils.getWhereClause(columnsToSearch),
                                 searchValues,
                                 null);
                         break;
@@ -337,17 +337,17 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
 
                     case SEARCH_LANDMARK_LOADER_ID: {
                         String[] columnsToSearch = new String[] {
-                                        myContentProvider.SearchLandmarkResults.LANDMARK_TITLE_COLUMN,
-                                        myContentProvider.SearchLandmarkResults.AUTOMATIC_LOCATION_COLUMN,
-                                        myContentProvider.SearchLandmarkResults.LOCATION_DESCRIPTION_COLUMN,
-                                        myContentProvider.SearchLandmarkResults.DESCRIPTION_COLUMN };
+                                        MyContentProvider.SearchLandmarkResults.LANDMARK_TITLE_COLUMN,
+                                        MyContentProvider.SearchLandmarkResults.AUTOMATIC_LOCATION_COLUMN,
+                                        MyContentProvider.SearchLandmarkResults.LOCATION_DESCRIPTION_COLUMN,
+                                        MyContentProvider.SearchLandmarkResults.DESCRIPTION_COLUMN };
                         String[] searchValues = new String[columnsToSearch.length];
                         Arrays.fill(searchValues, searchValue);
 
                         loader = new CursorLoader(activity,
-                                myContentProvider.CONTENT_SEARCH_LANDMARK_RESULTS_URI,
+                                MyContentProvider.CONTENT_SEARCH_LANDMARK_RESULTS_URI,
                                 null,
-                                DbUtils.getWhereClause(columnsToSearch),
+                                DatabaseUtils.getWhereClause(columnsToSearch),
                                 searchValues,
                                 null);
                         break;
@@ -457,7 +457,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
-        mSetCurrentTripCallback = StartActivitiesUtils.onAttachCheckInterface(activity, OnSetCurrentTrip.class);
+        mSetCurrentTripCallback = StartActivityUtils.onAttachCheckInterface(activity, OnSetCurrentTrip.class);
     }
 
     @Override
@@ -480,7 +480,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
     public void onDeleteTripDialog() {
 
         // erase the notification if last trip
-        Trip latestTrip = DbUtils.getLastTrip(getActivity());
+        Trip latestTrip = DatabaseUtils.getLastTrip(getActivity());
         if(latestTrip != null && (latestTrip.getId() == currentTrip.getId())){
 //            NotificationManager mNotificationManager =
 //                    (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -490,14 +490,14 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
 
         // delete the trip
         getActivity().getContentResolver().delete(
-                ContentUris.withAppendedId(myContentProvider.CONTENT_TRIP_ID_URI_BASE, currentTrip.getId()),
+                ContentUris.withAppendedId(MyContentProvider.CONTENT_TRIP_ID_URI_BASE, currentTrip.getId()),
                 null,
                 null);
 
         // delete all the landmarks of the trip
         getActivity().getContentResolver().delete(
-                myContentProvider.CONTENT_LANDMARKS_URI,
-                myContentProvider.Landmarks.TRIP_ID_COLUMN + " =? ",
+                MyContentProvider.CONTENT_LANDMARKS_URI,
+                MyContentProvider.Landmarks.TRIP_ID_COLUMN + " =? ",
                 new String[]{Integer.toString(currentTrip.getId())});
     }
 

@@ -11,7 +11,6 @@ import com.tripper.tripper.R;
 
 public class ChangesNotSavedDialogFragment extends DialogFragment {
 
-    // tag
     public static final String TAG = ChangesNotSavedDialogFragment.class.getSimpleName();
 
     public static final int NOT_SAVED_DIALOG = 10;

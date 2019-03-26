@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.tripper.tripper.services.myContentProvider;
+import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.utils.DateUtils;
 
 import java.util.Date;
@@ -25,13 +25,13 @@ public class Trip implements Parcelable {
     private String description;
 
     public Trip(Cursor cursor){
-        final int COLUMN_ID = cursor.getColumnIndexOrThrow(myContentProvider.Trips.ID_COLUMN);
-        final int COLUMN_TITLE = cursor.getColumnIndexOrThrow(myContentProvider.Trips.TITLE_COLUMN);
-        final int COLUMN_START_DATE = cursor.getColumnIndexOrThrow(myContentProvider.Trips.START_DATE_COLUMN);
-        final int COLUMN_END_DATE = cursor.getColumnIndexOrThrow(myContentProvider.Trips.END_DATE_COLUMN);
-        final int COLUMN_PLACE = cursor.getColumnIndexOrThrow(myContentProvider.Trips.PLACE_COLUMN);
-        final int COLUMN_PICTURE = cursor.getColumnIndexOrThrow(myContentProvider.Trips.PICTURE_COLUMN);
-        final int COLUMN_DESCRIPTION = cursor.getColumnIndexOrThrow(myContentProvider.Trips.DESCRIPTION_COLUMN);
+        final int COLUMN_ID = cursor.getColumnIndexOrThrow(MyContentProvider.Trips.ID_COLUMN);
+        final int COLUMN_TITLE = cursor.getColumnIndexOrThrow(MyContentProvider.Trips.TITLE_COLUMN);
+        final int COLUMN_START_DATE = cursor.getColumnIndexOrThrow(MyContentProvider.Trips.START_DATE_COLUMN);
+        final int COLUMN_END_DATE = cursor.getColumnIndexOrThrow(MyContentProvider.Trips.END_DATE_COLUMN);
+        final int COLUMN_PLACE = cursor.getColumnIndexOrThrow(MyContentProvider.Trips.PLACE_COLUMN);
+        final int COLUMN_PICTURE = cursor.getColumnIndexOrThrow(MyContentProvider.Trips.PICTURE_COLUMN);
+        final int COLUMN_DESCRIPTION = cursor.getColumnIndexOrThrow(MyContentProvider.Trips.DESCRIPTION_COLUMN);
 
         id = cursor.getInt(COLUMN_ID);
         title = cursor.getString(COLUMN_TITLE);
@@ -117,13 +117,13 @@ public class Trip implements Parcelable {
     public ContentValues tripToContentValues(){
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(myContentProvider.Trips.TITLE_COLUMN, title);
-        contentValues.put(myContentProvider.Trips.START_DATE_COLUMN, DateUtils.databaseDateToString(startDate));
-        contentValues.put(myContentProvider.Trips.END_DATE_COLUMN, DateUtils.databaseDateToString(endDate));
-        contentValues.put(myContentProvider.Trips.TITLE_COLUMN, title);
-        contentValues.put(myContentProvider.Trips.PLACE_COLUMN, place);
-        contentValues.put(myContentProvider.Trips.PICTURE_COLUMN, picture);
-        contentValues.put(myContentProvider.Trips.DESCRIPTION_COLUMN, description);
+        contentValues.put(MyContentProvider.Trips.TITLE_COLUMN, title);
+        contentValues.put(MyContentProvider.Trips.START_DATE_COLUMN, DateUtils.databaseDateToString(startDate));
+        contentValues.put(MyContentProvider.Trips.END_DATE_COLUMN, DateUtils.databaseDateToString(endDate));
+        contentValues.put(MyContentProvider.Trips.TITLE_COLUMN, title);
+        contentValues.put(MyContentProvider.Trips.PLACE_COLUMN, place);
+        contentValues.put(MyContentProvider.Trips.PICTURE_COLUMN, picture);
+        contentValues.put(MyContentProvider.Trips.DESCRIPTION_COLUMN, description);
 
         return contentValues;
     }

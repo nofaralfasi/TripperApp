@@ -15,7 +15,6 @@ import com.tripper.tripper.trip.fragment.TripUpdateFragment;
 
 public class DescriptionDialogFragment extends DialogFragment {
 
-    // tag
     public static final String TAG = DescriptionDialogFragment.class.getSimpleName();
 
     private String initialDescription;
@@ -56,15 +55,6 @@ public class DescriptionDialogFragment extends DialogFragment {
                 });
         AlertDialog descriptionDialog = descriptionDialogBuilder.create();
 
-//        descriptionDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(final DialogInterface dialog){
-//                Button doneButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE);
-//                Button cancelButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
-//                doneButton.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent));
-//                cancelButton.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent));
-//            }
-//        });
         return descriptionDialog;
     }
 

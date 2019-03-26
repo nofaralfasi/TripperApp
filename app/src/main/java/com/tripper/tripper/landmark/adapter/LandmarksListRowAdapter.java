@@ -22,13 +22,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tripper.tripper.R;
-import com.tripper.tripper.services.myContentProvider;
-import com.tripper.tripper.core.Landmark;
-import com.tripper.tripper.utils.DateUtils;
-import com.tripper.tripper.views.HighlightTextView;
-import com.tripper.tripper.utils.StartActivitiesUtils;
 import com.squareup.picasso.Picasso;
+import com.tripper.tripper.R;
+import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.services.MyContentProvider;
+import com.tripper.tripper.utils.DateUtils;
+import com.tripper.tripper.utils.StartActivityUtils;
+import com.tripper.tripper.views.HighlightTextView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -128,10 +128,10 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
     }
     // ------------------------ Constructor ----------------------------- //
     public LandmarksListRowAdapter(Context context, Fragment fragment, Cursor cursor, String filter) {
-        mCallbackSetCurLandmark = StartActivitiesUtils.onAttachCheckInterface(fragment, OnOpenLandmarkDetailsForUpdate.class);
-        mCallbackActionItemPress = StartActivitiesUtils.onAttachCheckInterface(fragment, OnActionItemPress.class);
-        mCallbackMultipleSelectHandle = StartActivitiesUtils.onAttachCheckInterface(fragment, OnGetSelectedLandmarkMap.class);
-        mCallbackFilterPublishResults = StartActivitiesUtils.onAttachCheckInterface(fragment, OnFilterPublishResults.class);
+        mCallbackSetCurLandmark = StartActivityUtils.onAttachCheckInterface(fragment, OnOpenLandmarkDetailsForUpdate.class);
+        mCallbackActionItemPress = StartActivityUtils.onAttachCheckInterface(fragment, OnActionItemPress.class);
+        mCallbackMultipleSelectHandle = StartActivityUtils.onAttachCheckInterface(fragment, OnGetSelectedLandmarkMap.class);
+        mCallbackFilterPublishResults = StartActivityUtils.onAttachCheckInterface(fragment, OnFilterPublishResults.class);
 
         this.filter = filter;
         this.context = context;
@@ -302,7 +302,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
             }
 
             // date of current item
-            Date dateCurrent =  DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(myContentProvider.Landmarks.DATE_COLUMN)));
+            Date dateCurrent =  DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(MyContentProvider.Landmarks.DATE_COLUMN)));
 
             if (!cursor.moveToPrevious()){
                 cursor.moveToNext();
@@ -310,7 +310,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
             }
 
             // date of item that temporary comes after
-            Date datePrev = DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(myContentProvider.Landmarks.DATE_COLUMN)));
+            Date datePrev = DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(MyContentProvider.Landmarks.DATE_COLUMN)));
 
             cursor.moveToNext();
             return DateUtils.isSameDay(dateCurrent, datePrev) ? TYPE_LANDMARK : TYPE_HEADER;
@@ -333,10 +333,10 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
             return new CursorWrapper(cursor);
         } else {
             String[] columnsToSearch = new String[] {
-                    myContentProvider.Landmarks.TITLE_COLUMN,
-                    myContentProvider.Landmarks.AUTOMATIC_LOCATION_COLUMN,
-                    myContentProvider.Landmarks.LOCATION_DESCRIPTION_COLUMN,
-                    myContentProvider.Landmarks.DESCRIPTION_COLUMN,
+                    MyContentProvider.Landmarks.TITLE_COLUMN,
+                    MyContentProvider.Landmarks.AUTOMATIC_LOCATION_COLUMN,
+                    MyContentProvider.Landmarks.LOCATION_DESCRIPTION_COLUMN,
+                    MyContentProvider.Landmarks.DESCRIPTION_COLUMN,
             };
 
             return new FilterCursorWrapper(cursor, this.filter, columnsToSearch);

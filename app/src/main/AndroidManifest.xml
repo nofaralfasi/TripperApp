@@ -60,7 +60,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <provider
-            android:name="com.tripper.tripper.services.myContentProvider"
+            android:name="com.tripper.tripper.services.MyContentProvider"
             android:authorities="com.tripper.tripper"
             android:exported="false" />
         <provider
@@ -114,13 +114,13 @@
             android:theme="@style/ThemeForTranslucent" />
         <activity android:name="com.tripper.tripper.helpers.SettingsActivity" />
 
-        <receiver android:name="com.tripper.tripper.helpers.BootCompletedHandler">
+        <receiver android:name="com.tripper.tripper.helpers.CompletedBootHandler">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <activity android:name="com.tripper.tripper.helpers.NotificationCancelActivity"
+        <activity android:name="com.tripper.tripper.helpers.CancelNotificationActivity"
             android:excludeFromRecents="true"
             android:theme="@style/ThemeForTranslucent"/>
     </application>

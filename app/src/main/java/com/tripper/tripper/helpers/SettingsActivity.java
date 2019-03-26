@@ -1,7 +1,7 @@
 package com.tripper.tripper.helpers;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.tripper.tripper.R;
 import com.tripper.tripper.core.Trip;
-import com.tripper.tripper.utils.DbUtils;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;
 
@@ -30,7 +30,6 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        //toolbar
         setTitle(getResources().getString(R.string.app_settings_toolbar_title));
 
         enableQuickLandmarkSwitchButton = findViewById(R.id.notifications_switch);
@@ -40,9 +39,8 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 SharedPreferencesUtils.saveEnableNotificationsState(getApplicationContext(), bChecked);
                 if (bChecked) {
-                    // update the notification with the last trip if there is
                     SharedPreferencesUtils.saveCloseNotificationsState(SettingsActivity.this, false);
-                    Trip latestTrip = DbUtils.getLastTrip(SettingsActivity.this);
+                    Trip latestTrip = DatabaseUtils.getLastTrip(SettingsActivity.this);
                     if(latestTrip != null){
                         NotificationUtils.initNotification(SettingsActivity.this, latestTrip.getTitle());
                     }

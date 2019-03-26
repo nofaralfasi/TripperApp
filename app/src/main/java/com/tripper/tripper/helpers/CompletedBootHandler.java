@@ -5,20 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.tripper.tripper.core.Trip;
-import com.tripper.tripper.utils.DbUtils;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;
 
-/**
- * Created by david on 1/13/2017.
- */
 
-public class BootCompletedHandler extends BroadcastReceiver {
+public class CompletedBootHandler extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Trip latestTrip = DbUtils.getLastTrip(context);
-//        if(NotificationUtils.areNotificationsEnabled(context) && latestTrip != null &&
-//                !SharedPreferencesUtils.getCloseNotificationsState(context)) {
+        Trip latestTrip = DatabaseUtils.getLastTrip(context);
         if(latestTrip != null && SharedPreferencesUtils.getIsNotificationsWindowOpen(context)){
             NotificationUtils.initNotification(context, latestTrip.getTitle());
         }

@@ -35,20 +35,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.services.myContentProvider;
+import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.landmark.activity.LandmarkMainActivity;
 import com.tripper.tripper.landmark.activity.LandmarkMultiMap;
 import com.tripper.tripper.landmark.adapter.LandmarksListRowAdapter;
 import com.tripper.tripper.landmark.interfaces.OnGetCurrentTripId;
-import com.tripper.tripper.core.Landmark;
-import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.trip.fragment.TripViewDetailsFragment;
 import com.tripper.tripper.utils.AnimationUtils;
-import com.tripper.tripper.utils.DbUtils;
+import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.LocationUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;
-import com.tripper.tripper.utils.StartActivitiesUtils;
+import com.tripper.tripper.utils.StartActivityUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,9 +164,9 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
             @Override
             public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
                 return new CursorLoader(getActivity(),
-                        myContentProvider.CONTENT_LANDMARKS_URI,
+                        MyContentProvider.CONTENT_LANDMARKS_URI,
                         null,
-                        myContentProvider.Landmarks.TRIP_ID_COLUMN + " =? ",
+                        MyContentProvider.Landmarks.TRIP_ID_COLUMN + " =? ",
                         new String[] { Integer.toString(currentTripId) },
                         null);
             }
@@ -221,11 +221,11 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
-        mCallbackGetCurrentTripId = StartActivitiesUtils.onAttachCheckInterface(activity, OnGetCurrentTripId.class);
-        mSetCurrentLandmarkCallback = StartActivitiesUtils.onAttachCheckInterface(activity, OnSetCurrentLandmark.class);
-        mCallbackGetCurrentTripTitle = StartActivitiesUtils.onAttachCheckInterface(activity, GetCurrentTripTitle.class);
-        mCallbackGetIsLandmarkAdded = StartActivitiesUtils.onAttachCheckInterface(activity, OnGetIsLandmarkAdded.class);
-        mCallbackGetMoveToLandmarkId = StartActivitiesUtils.onAttachCheckInterface(activity, OnGetMoveToLandmarkId.class);
+        mCallbackGetCurrentTripId = StartActivityUtils.onAttachCheckInterface(activity, OnGetCurrentTripId.class);
+        mSetCurrentLandmarkCallback = StartActivityUtils.onAttachCheckInterface(activity, OnSetCurrentLandmark.class);
+        mCallbackGetCurrentTripTitle = StartActivityUtils.onAttachCheckInterface(activity, GetCurrentTripTitle.class);
+        mCallbackGetIsLandmarkAdded = StartActivityUtils.onAttachCheckInterface(activity, OnGetIsLandmarkAdded.class);
+        mCallbackGetMoveToLandmarkId = StartActivityUtils.onAttachCheckInterface(activity, OnGetMoveToLandmarkId.class);
     }
 
     @Override
@@ -301,7 +301,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
     public void onDeleteLandmarkDialog() {
         // delete current landmark
         getActivity().getContentResolver().delete(
-                ContentUris.withAppendedId(myContentProvider.CONTENT_LANDMARK_ID_URI_BASE, currentLandmark.getId()),
+                ContentUris.withAppendedId(MyContentProvider.CONTENT_LANDMARK_ID_URI_BASE, currentLandmark.getId()),
                 null,
                 null);
     }
@@ -309,7 +309,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
     public void onDeleteMultipleLandmarks() {
         for (Landmark landmark : multiSelectedLandmarksMap.values()) {
             getActivity().getContentResolver().delete(
-                    ContentUris.withAppendedId(myContentProvider.CONTENT_LANDMARK_ID_URI_BASE, landmark.getId()),
+                    ContentUris.withAppendedId(MyContentProvider.CONTENT_LANDMARK_ID_URI_BASE, landmark.getId()),
                     null,
                     null);
         }
@@ -428,7 +428,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
         //check if i'm the last trip and the quick landmark window is closed
         MenuItem showQuickLandmarks =  menu.findItem(R.id.show_quick_landmarks_option_item);
         MenuItem hideQuickLandmarks =  menu.findItem(R.id.hide_quick_landmarks_option_item);
-        Trip lastTrip = DbUtils.getLastTrip(getActivity());
+        Trip lastTrip = DatabaseUtils.getLastTrip(getActivity());
         if(lastTrip != null && lastTrip.getId() == currentTripId){
            if(!SharedPreferencesUtils.getIsNotificationsWindowOpen(getActivity())){
                showQuickLandmarks.setVisible(true);
@@ -502,7 +502,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
                 break;
             case R.id.show_quick_landmarks_option_item:
                 if(NotificationUtils.areNotificationsEnabled(getActivity())) {
-                    NotificationUtils.initNotification(getActivity(), DbUtils.getLastTrip(getActivity()).getTitle());
+                    NotificationUtils.initNotification(getActivity(), DatabaseUtils.getLastTrip(getActivity()).getTitle());
                 }
                 else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.notification_disabled_message), Toast.LENGTH_LONG).show();
@@ -580,9 +580,9 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
 
     private void setRecyclerViewPosition(Cursor cursor) {
         int gotoLandmarkId = mCallbackGetMoveToLandmarkId.onGetMoveToLandmarkId();
-        if (gotoLandmarkId != StartActivitiesUtils.NOT_JUMP_TO_LANDMARK_ID) {
+        if (gotoLandmarkId != StartActivityUtils.NOT_JUMP_TO_LANDMARK_ID) {
             while (cursor.moveToNext()) {
-                int landmarkId = cursor.getInt(cursor.getColumnIndexOrThrow(myContentProvider.Landmarks.ID_COLUMN));
+                int landmarkId = cursor.getInt(cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.ID_COLUMN));
                 if (gotoLandmarkId == landmarkId) {
                     landmarksRecyclerView.getLayoutManager().scrollToPosition(cursor.getPosition()); // make it smooth
                 }
