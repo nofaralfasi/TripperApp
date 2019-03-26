@@ -1,6 +1,7 @@
 package com.tripper.tripper.trip.fragment;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.app.DatePickerDialog;
 import android.widget.EditText;
 
 import com.tripper.tripper.R;
@@ -26,7 +26,6 @@ import java.util.Date;
 
 public class TripCreateTitleFragment extends Fragment {
 
-    // tag
     public static final String TAG = TripCreateTitleFragment.class.getSimpleName();
 
     View tripCreateTitleView;
@@ -40,7 +39,6 @@ public class TripCreateTitleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         tripCreateTitleView = inflater.inflate(R.layout.fragment_trip_create_title, container, false);
 
         dateFormatter = DateUtils.getFormDateFormat();
@@ -49,7 +47,6 @@ public class TripCreateTitleFragment extends Fragment {
         findViewsById();
         setListeners();
 
-        //restore already written details, that saved in activity
         Trip currentTrip = ((CreateTripActivity)tripCreateParentActivity).currentCreatedTrip;
         tripTitleEditText.setText(currentTrip.getTitle());
         tripStartDateEditText.setText(dateFormatter.format(currentTrip.getStartDate()));
@@ -59,21 +56,13 @@ public class TripCreateTitleFragment extends Fragment {
         return tripCreateTitleView;
     }
 
-
-    //---------------- Init views ---------------//
-
-    // define all needed views by id's
     private void findViewsById(){
         tripContinueFloatingActionButton = tripCreateTitleView.findViewById(R.id.trip_create_title_continue_floating_action_button);
         tripStartDateEditText = tripCreateTitleView.findViewById(R.id.date_txt);
         tripTitleEditText = tripCreateTitleView.findViewById(R.id.trip_create_title_edittext);
     }
 
-    // find all needed listeners
     private void setListeners(){
-
-        // Continue Button Listener
-
         tripContinueFloatingActionButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -87,7 +76,6 @@ public class TripCreateTitleFragment extends Fragment {
             }
         });
 
-        // Date Edit Text Listener
         tripStartDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +84,6 @@ public class TripCreateTitleFragment extends Fragment {
             }
         });
 
-        // Title Edit Text Listener
         tripTitleEditText.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
             }
@@ -113,21 +100,15 @@ public class TripCreateTitleFragment extends Fragment {
         });
     }
 
-
-    //---------------- Button function ---------------//
     private void onContinueButtonSelect() {
         if (tripCreateParentActivity.findViewById(R.id.trip_create_fragment_container) != null) {
-
-          //move to details fragment
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.trip_create_fragment_container, new TripCreateDetailsFragment(), TripCreateDetailsFragment.TAG);
             transaction.addToBackStack(null);
             transaction.commit();
-
         }
     }
 
-    //---------------- Date functions ---------------//
     private void setDatePickerSettings(Date currentDate) {
         tripDatePickerDialog = DateUtils.getDatePicker(getActivity(), currentDate, new DatePickerDialog.OnDateSetListener() {
 
@@ -142,8 +123,6 @@ public class TripCreateTitleFragment extends Fragment {
     }
 
 
-
-    //-----------------Save and Restore handle-------------------//
     @Override
     public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);

@@ -44,7 +44,7 @@ public class DestinationOptionDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 DestinationOptionDialogFragment.DialogOptions whichOptionEnum = DestinationOptionDialogFragment.DialogOptions.values()[which];
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(DestinationListFragment.LANDMARK_DIALOG_OPTION, whichOptionEnum);
+                resultIntent.putExtra(DestinationListFragment.DESTINATION_DIALOG_OPTION, whichOptionEnum);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), getActivity().RESULT_OK, resultIntent);
             }
         });

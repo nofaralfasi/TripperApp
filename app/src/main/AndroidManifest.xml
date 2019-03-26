@@ -123,6 +123,9 @@
         <activity android:name="com.tripper.tripper.helpers.CancelNotificationActivity"
             android:excludeFromRecents="true"
             android:theme="@style/ThemeForTranslucent"/>
+
+        <service android:name=".services.MySensor" />
+
     </application>
 
 </manifest>

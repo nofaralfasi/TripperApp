@@ -22,9 +22,9 @@ import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.StartActivityUtils;
 
 public class DestinationMainActivity extends AppCompatActivity implements OnGetCurrentTripID,
-        OnGetCurrentDestination, OnGetCurrentTrip, DestinationListFragment.OnSetCurrentLandmark, DestinationListFragment.GetCurrentTripTitle,
-        DestinationListFragment.OnGetIsLandmarkAdded, DestinationDetailsFragment.OnLandmarkAddedListener,
-        ChangesNotSavedDialogFragment.OnHandleDialogResult, DestinationListFragment.OnGetMoveToLandmarkId {
+        OnGetCurrentDestination, OnGetCurrentTrip, DestinationListFragment.OnSetCurrentDestination, DestinationListFragment.GetCurrentTripTitle,
+        DestinationListFragment.OnGetIsDestinationAdded, DestinationDetailsFragment.OnLandmarkAddedListener,
+        ChangesNotSavedDialogFragment.OnHandleDialogResult, DestinationListFragment.OnGetMoveToDestinationID {
 
     public static final String TAG = DestinationMainActivity.class.getSimpleName();
 

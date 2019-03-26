@@ -92,8 +92,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
     private LoaderManager.LoaderCallbacks<Cursor> cursorSearchLoaderCallbacks;
     private SearchResultCursorTreeAdapter searchAdapter;
 
-    // searchLoader
-    private boolean isLandmarkLoadFinished;
+    private boolean isDestinationLoadFinished;
     private boolean isTripLoadFinished;
     private boolean[] expendedSearchState;
 
@@ -673,14 +672,14 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
                 break;
 
             case SEARCH_LANDMARK_LOADER_ID:
-                isLandmarkLoadFinished = isFinish;
+                isDestinationLoadFinished = isFinish;
                 break;
 
             default:
                 return;
         }
 
-        if (!isTripLoadFinished || !isLandmarkLoadFinished) {
+        if (!isTripLoadFinished || !isDestinationLoadFinished) {
             searchLoadingSpinner.setVisibility(View.VISIBLE);
         } else {
             searchLoadingSpinner.setVisibility(View.GONE);

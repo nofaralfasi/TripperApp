@@ -61,22 +61,21 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
     public static final String TAG = DestinationListFragment.class.getSimpleName();
 
     private OnGetCurrentTripID mCallbackGetCurrentTripId;
-    private OnSetCurrentLandmark mSetCurrentLandmarkCallback;
-    private OnGetIsLandmarkAdded mCallbackGetIsLandmarkAdded;
+    static final int DESTINATION_DIALOG = 0;
+    static final String DESTINATION_DIALOG_OPTION = "DESTINATION_DIALOG_OPTION";
     private GetCurrentTripTitle mCallbackGetCurrentTripTitle;
-    private OnGetMoveToLandmarkId mCallbackGetMoveToLandmarkId;
-
-    static final int LANDMARK_DIALOG = 0;
-    static final String LANDMARK_DIALOG_OPTION = "LANDMARK_DIALOG_OPTION";
-    static final int LANDMARK_LOADER_ID = 0;
+    static final int DESTINATION_LOADER_ID = 0;
+    AlertDialog destinationDeleteDialogConfirm;
+    AlertDialog multipleDestinationDeleteDialogConfirm;
+    private OnSetCurrentDestination mSetCurrentDestinationCallback;
 
     private Destination currentDestination;
-    AlertDialog deleteLandmarkDialogConfirm;
-    AlertDialog deleteMultipleLandmarkDialogConfirm;
+    private OnGetIsDestinationAdded mCallbackGetIsDestinationAdded;
+    private OnGetMoveToDestinationID mCallbackGetMoveToDestinationId;
     LoaderManager.LoaderCallbacks<Cursor> cursorLoaderCallbacks;
     ListRowDestinationAdapter listRowDestinationAdapter;
     private String currentSearchQuery;
-    private LandmarkOnQueryTextListener landmarkOnQueryTextListener;
+    private OnQueryDestinationTextListener onQueryDestinationTextListener;
     private Parcelable recyclerViewScrollPosition;
 
     private ProgressBar loadingSpinner;
@@ -96,35 +95,6 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
 
     private HashMap<Integer, Destination> multiSelectedLandmarksMap = new HashMap<Integer, Destination>();
     private boolean isMultipleSelect = false;
-
-    public interface OnSetCurrentLandmark {
-        void onSetCurrentLandmark(Destination destination);
-    }
-
-    public interface GetCurrentTripTitle {
-        String getCurrentTripTitle();
-    }
-
-    public interface OnGetIsLandmarkAdded {
-        boolean getIsLandmarkAdded();
-    }
-
-    public interface OnGetMoveToLandmarkId {
-        int onGetMoveToLandmarkId();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null){
-            currentDestination = savedInstanceState.getParcelable(saveCurrentLandmark);
-            currentSearchQuery = savedInstanceState.getString(saveCurrentSearchQuery);
-            multiSelectedLandmarksMap = ((HashMap<Integer, Destination>)savedInstanceState.getSerializable(saveSelectedLandmarks));
-            isMultipleSelect = savedInstanceState.getBoolean(saveIsMultipleSelected);
-            recyclerViewScrollPosition = savedInstanceState.getParcelable(saveRecyclerViewScrollPosition);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -192,11 +162,11 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
             }
         };
 
-        if (getLoaderManager().getLoader(LANDMARK_LOADER_ID) == null) {
-            getLoaderManager().initLoader(LANDMARK_LOADER_ID, null, cursorLoaderCallbacks);
+        if (getLoaderManager().getLoader(DESTINATION_LOADER_ID) == null) {
+            getLoaderManager().initLoader(DESTINATION_LOADER_ID, null, cursorLoaderCallbacks);
         }
         else {
-            getLoaderManager().restartLoader(LANDMARK_LOADER_ID, null, cursorLoaderCallbacks);
+            getLoaderManager().restartLoader(DESTINATION_LOADER_ID, null, cursorLoaderCallbacks);
         }
 
         // init the FloatingActionButton
@@ -215,6 +185,10 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         return parentView;
     }
 
+    public interface GetCurrentTripTitle {
+        String getCurrentTripTitle();
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -222,21 +196,103 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         mCallbackGetCurrentTripId = StartActivityUtils.onAttachCheckInterface(activity, OnGetCurrentTripID.class);
-        mSetCurrentLandmarkCallback = StartActivityUtils.onAttachCheckInterface(activity, OnSetCurrentLandmark.class);
+        mSetCurrentDestinationCallback = StartActivityUtils.onAttachCheckInterface(activity, OnSetCurrentDestination.class);
         mCallbackGetCurrentTripTitle = StartActivityUtils.onAttachCheckInterface(activity, GetCurrentTripTitle.class);
-        mCallbackGetIsLandmarkAdded = StartActivityUtils.onAttachCheckInterface(activity, OnGetIsLandmarkAdded.class);
-        mCallbackGetMoveToLandmarkId = StartActivityUtils.onAttachCheckInterface(activity, OnGetMoveToLandmarkId.class);
+        mCallbackGetIsDestinationAdded = StartActivityUtils.onAttachCheckInterface(activity, OnGetIsDestinationAdded.class);
+        mCallbackGetMoveToDestinationId = StartActivityUtils.onAttachCheckInterface(activity, OnGetMoveToDestinationID.class);
     }
 
     @Override
     public void onOpenLandmarkDetailsForView(Destination destination) {
         currentDestination = destination;
-        mSetCurrentLandmarkCallback.onSetCurrentLandmark(destination);
+        mSetCurrentDestinationCallback.onSetCurrentLandmark(destination);
         DestinationViewDetailsFragment newFragment = new DestinationViewDetailsFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.landmark_main_fragment_container, newFragment, DestinationViewDetailsFragment.TAG);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null){
+            currentDestination = savedInstanceState.getParcelable(saveCurrentLandmark);
+            currentSearchQuery = savedInstanceState.getString(saveCurrentSearchQuery);
+            multiSelectedLandmarksMap = ((HashMap<Integer, Destination>)savedInstanceState.getSerializable(saveSelectedLandmarks));
+            isMultipleSelect = savedInstanceState.getBoolean(saveIsMultipleSelected);
+            recyclerViewScrollPosition = savedInstanceState.getParcelable(saveRecyclerViewScrollPosition);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).supportInvalidateOptionsMenu();
+
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(getOnQueryDestinationTextListener());
+        }
+    }
+
+    //------------On Activity Result--------------//
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request it is that we're responding to
+        if (requestCode == DESTINATION_DIALOG) {
+            if (resultCode == Activity.RESULT_OK) {
+                DestinationOptionDialogFragment.DialogOptions whichOptionEnum = (DestinationOptionDialogFragment.DialogOptions) data.getSerializableExtra(DESTINATION_DIALOG_OPTION);
+                switch (whichOptionEnum) {
+                    case EDIT:
+                        onOpenLandmarkDetailsForUpdate();
+                        break;
+                    case DELETE:
+                        destinationDeleteDialogConfirm.setMessage(getResources().getString(R.string.landmark_delete_warning_dialog_message));
+                        destinationDeleteDialogConfirm.show();
+                        break;
+                    case VIEW:
+                        onOpenLandmarkDetailsForView(currentDestination);
+                        break;
+                }
+            }
+        }
+    }
+
+    private void initDialogs() {
+        // Use the Builder class for convenient dialog construction
+        destinationDeleteDialogConfirm = new AlertDialog.Builder(getActivity())
+                //set message, title, and icon
+                .setTitle(getResources().getString(R.string.landmark_delete_warning_dialog_title))
+                .setPositiveButton(getResources().getString(R.string.landmark_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        onDeleteLandmarkDialog();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.landmark_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+
+        multipleDestinationDeleteDialogConfirm = new AlertDialog.Builder(getActivity())
+                //set message, title, and icon
+                .setTitle(getResources().getString(R.string.landmark_multiple_delete_warning_dialog_title))
+                .setPositiveButton(getResources().getString(R.string.landmark_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        onDeleteMultipleLandmarks();
+                        dialog.dismiss();
+                        listRowDestinationAdapter.handleFinishActionMode();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.landmark_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
     }
 
     @Override
@@ -255,39 +311,29 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         super.onStart();
     }
 
+    ////////////////////////////////
+    //Toolbar functions
+    ////////////////////////////////
     @Override
-    public void onResume() {
-        super.onResume();
-        ((AppCompatActivity) getActivity()).supportInvalidateOptionsMenu();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_landmarks_timeline_menusitem, menu);
 
-        if (searchView != null) {
-            searchView.setOnQueryTextListener(getLandmarkOnQueryTextListener());
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(getOnQueryDestinationTextListener());
+
+        EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        if(searchEditText != null) {
+            searchEditText.setTextColor(Color.WHITE);
         }
     }
 
-
-
-    //------------On Activity Result--------------//
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request it is that we're responding to
-        if (requestCode == LANDMARK_DIALOG) {
-            if (resultCode == Activity.RESULT_OK) {
-                DestinationOptionDialogFragment.DialogOptions whichOptionEnum = (DestinationOptionDialogFragment.DialogOptions) data.getSerializableExtra(LANDMARK_DIALOG_OPTION);
-                switch (whichOptionEnum) {
-                    case EDIT:
-                        onOpenLandmarkDetailsForUpdate();
-                        break;
-                    case DELETE:
-                        deleteLandmarkDialogConfirm.setMessage(getResources().getString(R.string.landmark_delete_warning_dialog_message));
-                        deleteLandmarkDialogConfirm.show();
-                        break;
-                    case VIEW:
-                        onOpenLandmarkDetailsForView(currentDestination);
-                        break;
-                }
-            }
+    public OnQueryDestinationTextListener getOnQueryDestinationTextListener() {
+        if (onQueryDestinationTextListener == null) {
+            onQueryDestinationTextListener = new OnQueryDestinationTextListener();
         }
+        return onQueryDestinationTextListener;
     }
 
     public void onOpenLandmarkDetailsForUpdate() {
@@ -315,40 +361,36 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         }
     }
 
-    private void initDialogs() {
-        // Use the Builder class for convenient dialog construction
-        deleteLandmarkDialogConfirm = new AlertDialog.Builder(getActivity())
-                //set message, title, and icon
-                .setTitle(getResources().getString(R.string.landmark_delete_warning_dialog_title))
-                .setPositiveButton(getResources().getString(R.string.landmark_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        onDeleteLandmarkDialog();
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.landmark_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
+    @Override
+        public void onPrepareOptionsMenu(Menu menu) {
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 
-        deleteMultipleLandmarkDialogConfirm = new AlertDialog.Builder(getActivity())
-                //set message, title, and icon
-                .setTitle(getResources().getString(R.string.landmark_multiple_delete_warning_dialog_title))
-                .setPositiveButton(getResources().getString(R.string.landmark_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        onDeleteMultipleLandmarks();
-                        dialog.dismiss();
-                        listRowDestinationAdapter.handleFinishActionMode();
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.landmark_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
+        if (!TextUtils.isEmpty(currentSearchQuery)) {
+            String searchQuery = currentSearchQuery;
+
+            // set to null in order to avoid text change when expandActionView
+            searchView.setOnQueryTextListener(null);
+            MenuItemCompat.expandActionView(menu.findItem(R.id.search));
+
+            searchView.setOnQueryTextListener(getOnQueryDestinationTextListener());
+            searchView.setQuery(searchQuery, true);
+        }
+
+        //check if i'm the last trip and the quick Destination window is closed
+        MenuItem showQuickLandmarks =  menu.findItem(R.id.show_quick_landmarks_option_item);
+        MenuItem hideQuickLandmarks =  menu.findItem(R.id.hide_quick_landmarks_option_item);
+        Trip lastTrip = DatabaseUtils.getLastTrip(getActivity());
+        if(lastTrip != null && lastTrip.getId() == currentTripId){
+           if(!SharedPreferencesUtils.getIsNotificationsWindowOpen(getActivity())){
+               showQuickLandmarks.setVisible(true);
+               hideQuickLandmarks.setVisible(false);
+           }
+           else {
+               showQuickLandmarks.setVisible(false);
+               hideQuickLandmarks.setVisible(true);
+           }
+        }
+        super.onPrepareOptionsMenu(menu);
     }
 
 
@@ -371,75 +413,65 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
 
     }
 
-    ////////////////////////////////
-    //Toolbar functions
-    ////////////////////////////////
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_landmarks_timeline_menusitem, menu);
-
-        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
-        searchView.setQueryHint(getResources().getString(R.string.search_hint));
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setOnQueryTextListener(getLandmarkOnQueryTextListener());
-
-        EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        if(searchEditText != null) {
-            searchEditText.setTextColor(Color.WHITE);
-        }
-    }
-
-    private class LandmarkOnQueryTextListener implements SearchView.OnQueryTextListener {
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            searchView.clearFocus();
-            return true;
+    private void onCursorChange(Cursor cursor) {
+        if (mCallbackGetIsDestinationAdded.getIsLandmarkAdded()) {
+            return;
         }
 
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            updateSearchQuery(newText);
-            return true;
+        if (cursor.getCount() == 0) {
+                arrowWhenNoLandmarksImageView.setVisibility(View.VISIBLE);
+                arrowWhenNoLandmarksImageView.setAnimation(AnimationUtils.getArrowListEmptyAnimation());
+                messageWhenNoLandmarksTextView.setVisibility(View.VISIBLE);
+        } else {
+            arrowWhenNoLandmarksImageView.setAnimation(null);
+            arrowWhenNoLandmarksImageView.setVisibility(View.GONE);
+            messageWhenNoLandmarksTextView.setVisibility(View.GONE);
         }
-    }
-
-    public LandmarkOnQueryTextListener getLandmarkOnQueryTextListener() {
-        if (landmarkOnQueryTextListener == null) {
-            landmarkOnQueryTextListener = new LandmarkOnQueryTextListener();
-        }
-        return landmarkOnQueryTextListener;
     }
 
     @Override
-        public void onPrepareOptionsMenu(Menu menu) {
-        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+    public void OnActionItemPress(MenuItem item) {
+        int id = item.getItemId();
+        if(multiSelectedLandmarksMap.values().size() == 1){
+            currentDestination = multiSelectedLandmarksMap.values().iterator().next();
+            mSetCurrentDestinationCallback.onSetCurrentLandmark(currentDestination);
+        }
+        switch (id) {
+            case R.id.multiple_select_action_delete:
+                multipleDestinationDeleteDialogConfirm.setMessage(getResources().getString(R.string.landmark_multiple_delete_warning_dialog_message));
+                multipleDestinationDeleteDialogConfirm.show();
+                break;
+            case R.id.multiple_select_action_edit:
+                onOpenLandmarkDetailsForUpdate();
+                listRowDestinationAdapter.handleFinishActionMode();
+                break;
+            case R.id.multiple_select_action_view:
+                onOpenLandmarkDetailsForView(currentDestination);
+                listRowDestinationAdapter.handleFinishActionMode();
+                break;
 
-        if (!TextUtils.isEmpty(currentSearchQuery)) {
-            String searchQuery = currentSearchQuery;
+        }
+    }
 
-            // set to null in order to avoid text change when expandActionView
-            searchView.setOnQueryTextListener(null);
-            MenuItemCompat.expandActionView(menu.findItem(R.id.search));
-
-            searchView.setOnQueryTextListener(getLandmarkOnQueryTextListener());
-            searchView.setQuery(searchQuery, true);
+    private void setRecyclerViewPosition(Cursor cursor) {
+        int gotoLandmarkId = mCallbackGetMoveToDestinationId.onGetMoveToLandmarkId();
+        if (gotoLandmarkId != StartActivityUtils.NOT_JUMP_TO_LANDMARK_ID) {
+            while (cursor.moveToNext()) {
+                int landmarkId = cursor.getInt(cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.ID_COLUMN));
+                if (gotoLandmarkId == landmarkId) {
+                    landmarksRecyclerView.getLayoutManager().scrollToPosition(cursor.getPosition()); // make it smooth
+                }
+            }
         }
 
-        //check if i'm the last trip and the quick Destination window is closed
-        MenuItem showQuickLandmarks =  menu.findItem(R.id.show_quick_landmarks_option_item);
-        MenuItem hideQuickLandmarks =  menu.findItem(R.id.hide_quick_landmarks_option_item);
-        Trip lastTrip = DatabaseUtils.getLastTrip(getActivity());
-        if(lastTrip != null && lastTrip.getId() == currentTripId){
-           if(!SharedPreferencesUtils.getIsNotificationsWindowOpen(getActivity())){
-               showQuickLandmarks.setVisible(true);
-               hideQuickLandmarks.setVisible(false);
-           }
-           else {
-               showQuickLandmarks.setVisible(false);
-               hideQuickLandmarks.setVisible(true);
-           }
+        if (recyclerViewScrollPosition != null) {
+            landmarksRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewScrollPosition);
+            recyclerViewScrollPosition = null;
         }
-        super.onPrepareOptionsMenu(menu);
+    }
+
+    public interface OnSetCurrentDestination {
+        void onSetCurrentLandmark(Destination destination);
     }
 
     private void updateSearchQuery(String query) {
@@ -517,44 +549,12 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         return true;
     }
 
-    private void onCursorChange(Cursor cursor) {
-        if (mCallbackGetIsLandmarkAdded.getIsLandmarkAdded()) {
-            return;
-        }
-
-        if (cursor.getCount() == 0) {
-                arrowWhenNoLandmarksImageView.setVisibility(View.VISIBLE);
-                arrowWhenNoLandmarksImageView.setAnimation(AnimationUtils.getArrowListEmptyAnimation());
-                messageWhenNoLandmarksTextView.setVisibility(View.VISIBLE);
-        } else {
-            arrowWhenNoLandmarksImageView.setAnimation(null);
-            arrowWhenNoLandmarksImageView.setVisibility(View.GONE);
-            messageWhenNoLandmarksTextView.setVisibility(View.GONE);
-        }
+    public interface OnGetIsDestinationAdded {
+        boolean getIsLandmarkAdded();
     }
 
-    @Override
-    public void OnActionItemPress(MenuItem item) {
-        int id = item.getItemId();
-        if(multiSelectedLandmarksMap.values().size() == 1){
-            currentDestination = multiSelectedLandmarksMap.values().iterator().next();
-            mSetCurrentLandmarkCallback.onSetCurrentLandmark(currentDestination);
-        }
-        switch (id) {
-            case R.id.multiple_select_action_delete:
-                deleteMultipleLandmarkDialogConfirm.setMessage(getResources().getString(R.string.landmark_multiple_delete_warning_dialog_message));
-                deleteMultipleLandmarkDialogConfirm.show();
-                break;
-            case R.id.multiple_select_action_edit:
-                onOpenLandmarkDetailsForUpdate();
-                listRowDestinationAdapter.handleFinishActionMode();
-                break;
-            case R.id.multiple_select_action_view:
-                onOpenLandmarkDetailsForView(currentDestination);
-                listRowDestinationAdapter.handleFinishActionMode();
-                break;
-
-        }
+    public interface OnGetMoveToDestinationID {
+        int onGetMoveToLandmarkId();
     }
 
     @Override
@@ -577,21 +577,17 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         multiSelectedLandmarksMap.clear();
     }
 
-
-    private void setRecyclerViewPosition(Cursor cursor) {
-        int gotoLandmarkId = mCallbackGetMoveToLandmarkId.onGetMoveToLandmarkId();
-        if (gotoLandmarkId != StartActivityUtils.NOT_JUMP_TO_LANDMARK_ID) {
-            while (cursor.moveToNext()) {
-                int landmarkId = cursor.getInt(cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.ID_COLUMN));
-                if (gotoLandmarkId == landmarkId) {
-                    landmarksRecyclerView.getLayoutManager().scrollToPosition(cursor.getPosition()); // make it smooth
-                }
-            }
+    private class OnQueryDestinationTextListener implements SearchView.OnQueryTextListener {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            searchView.clearFocus();
+            return true;
         }
 
-        if (recyclerViewScrollPosition != null) {
-            landmarksRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewScrollPosition);
-            recyclerViewScrollPosition = null;
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            updateSearchQuery(newText);
+            return true;
         }
     }
 
