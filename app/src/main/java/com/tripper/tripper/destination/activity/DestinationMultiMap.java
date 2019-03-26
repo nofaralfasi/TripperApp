@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.activity;
+package com.tripper.tripper.destination.activity;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.tripper.tripper.utils.ImageUtils;
 
 import java.util.ArrayList;
 
-public class LandmarkMultiMap extends LandmarkMap {
+public class DestinationMultiMap extends DestinationMap {
 
     private ArrayList<Marker> markers;
     private ArrayList<LatLng> points;
@@ -53,7 +53,7 @@ public class LandmarkMultiMap extends LandmarkMap {
 
             landmarkLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
-            // Add a marker in Landmark
+            // Add a marker in Destination
             int spinnerPosition = lmArrayList.get(index).getTypePosition();
             Marker marker = mMap.addMarker(new MarkerOptions()
                             .icon(BitmapDescriptorFactory.fromBitmap(ImageUtils.getBitmap(this, iconTypeArray.getResourceId(spinnerPosition, -1))))

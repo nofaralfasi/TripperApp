@@ -11,11 +11,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -324,7 +324,7 @@ public class LocationUtilsActivity extends Activity implements GoogleApiClient.O
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // if called from Create Landmark and it's the first time
+                // if called from Create Destination and it's the first time
                     // if location permission is enabled
                     if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                         if (mLastLocation == null){

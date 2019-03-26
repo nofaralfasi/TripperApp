@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.activity;
+package com.tripper.tripper.destination.activity;
 
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -23,7 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.PicassoMarker;
@@ -33,10 +33,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class LandmarkMap extends AppCompatActivity implements OnMapReadyCallback, PlaceSelectionListener {
+public abstract class DestinationMap extends AppCompatActivity implements OnMapReadyCallback, PlaceSelectionListener {
 
     // tag
-    public static final String TAG = LandmarkMap.class.getSimpleName();
+    public static final String TAG = DestinationMap.class.getSimpleName();
 
     //privates
     private SimpleDateFormat dateFormatter;
@@ -46,7 +46,7 @@ public abstract class LandmarkMap extends AppCompatActivity implements OnMapRead
     //protected
     protected GoogleMap mMap;
     protected TypedArray iconTypeArray;
-    protected ArrayList<Landmark> lmArrayList;
+    protected ArrayList<Destination> lmArrayList;
     protected Map<Marker, Integer> markerToLmIndex;
     protected boolean isFirstLoad = true;
 
@@ -65,7 +65,7 @@ public abstract class LandmarkMap extends AppCompatActivity implements OnMapRead
         markerToLmIndex = new HashMap<>();
 
         dateFormatter = DateUtils.getFormDateFormat();
-        lmArrayList = getIntent().getExtras().getParcelableArrayList(LandmarkMainActivity.LandmarkArrayList);
+        lmArrayList = getIntent().getExtras().getParcelableArrayList(DestinationMainActivity.LandmarkArrayList);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -122,7 +122,7 @@ public abstract class LandmarkMap extends AppCompatActivity implements OnMapRead
                 TextView lmLocationDescriptionTextView = v.findViewById(R.id.landmark_map_card_location_description_text_view);
 
                 int lmIndex = markerToLmIndex.get(marker);
-                Landmark currentLm = lmArrayList.get(lmIndex);
+                Destination currentLm = lmArrayList.get(lmIndex);
 
                 setViewOrGone(lmTitleTextView, currentLm.getTitle());
                 setViewOrGone(lmDateTextView, dateFormatter.format(currentLm.getDate()));
@@ -140,7 +140,7 @@ public abstract class LandmarkMap extends AppCompatActivity implements OnMapRead
                     int widthInPixel = getResources().getDimensionPixelSize(R.dimen.map_marker_width);
                     int heightInPixel = getResources().getDimensionPixelSize(R.dimen.map_marker_height);
 
-                    ImageUtils.updatePhotoImageViewByPath(LandmarkMap.this, currentLm.getPhotoPath(), picassoMarker, widthInPixel, heightInPixel);
+                    ImageUtils.updatePhotoImageViewByPath(DestinationMap.this, currentLm.getPhotoPath(), picassoMarker, widthInPixel, heightInPixel);
                 }
 
                 // Returning the view containing InfoWindow contents

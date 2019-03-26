@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.dialogs.NoTripsDialogFragment;
 import com.tripper.tripper.services.MyContentProvider;
@@ -129,13 +129,13 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
 //        String currentLocationName = LocationUtils.updateLmLocationString(this, currentLocation);
         Trip lastTrip = DatabaseUtils.getLastTrip(this);
         String title = (currentLocationName == null || currentLocationName.trim().isEmpty()) ? getResources().getString(R.string.location_landmark_default_title) : currentLocationName;
-        Landmark newLandmark = new Landmark(lastTrip.getId(), title,
+        Destination newDestination = new Destination(lastTrip.getId(), title,
                 "", DateUtils.getDateOfToday(), currentLocationName, currentLocation, "", "", 0);
 
         // Insert data to DataBase
         getContentResolver().insert(
                 MyContentProvider.CONTENT_LANDMARKS_URI,
-                newLandmark.landmarkToContentValues());
+                newDestination.landmarkToContentValues());
 
         Toast.makeText(this, getResources().getString(R.string.toast_location_landmark_added_message_success, title, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
         finishAffinity();

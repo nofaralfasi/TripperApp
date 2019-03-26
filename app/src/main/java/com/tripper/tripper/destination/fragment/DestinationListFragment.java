@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.fragment;
+package com.tripper.tripper.destination.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,12 +35,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.core.Trip;
-import com.tripper.tripper.landmark.activity.LandmarkMainActivity;
-import com.tripper.tripper.landmark.activity.LandmarkMultiMap;
-import com.tripper.tripper.landmark.adapter.LandmarksListRowAdapter;
-import com.tripper.tripper.landmark.interfaces.OnGetCurrentTripId;
+import com.tripper.tripper.destination.activity.DestinationMainActivity;
+import com.tripper.tripper.destination.activity.DestinationMultiMap;
+import com.tripper.tripper.destination.adapter.ListRowDestinationAdapter;
+import com.tripper.tripper.destination.interfaces.OnGetCurrentTripID;
 import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.trip.fragment.TripViewDetailsFragment;
 import com.tripper.tripper.utils.AnimationUtils;
@@ -53,14 +53,14 @@ import com.tripper.tripper.utils.StartActivityUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LandmarksListFragment extends Fragment implements LandmarksListRowAdapter.OnFilterPublishResults,
-        LandmarksListRowAdapter.OnOpenLandmarkDetailsForUpdate, LandmarksListRowAdapter.OnActionItemPress,
-        LandmarksListRowAdapter.OnGetSelectedLandmarkMap{
+public class DestinationListFragment extends Fragment implements ListRowDestinationAdapter.OnFilterPublishResults,
+        ListRowDestinationAdapter.OnOpenLandmarkDetailsForUpdate, ListRowDestinationAdapter.OnActionItemPress,
+        ListRowDestinationAdapter.OnGetSelectedLandmarkMap{
 
     // tag
-    public static final String TAG = LandmarksListFragment.class.getSimpleName();
+    public static final String TAG = DestinationListFragment.class.getSimpleName();
 
-    private OnGetCurrentTripId mCallbackGetCurrentTripId;
+    private OnGetCurrentTripID mCallbackGetCurrentTripId;
     private OnSetCurrentLandmark mSetCurrentLandmarkCallback;
     private OnGetIsLandmarkAdded mCallbackGetIsLandmarkAdded;
     private GetCurrentTripTitle mCallbackGetCurrentTripTitle;
@@ -70,11 +70,11 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
     static final String LANDMARK_DIALOG_OPTION = "LANDMARK_DIALOG_OPTION";
     static final int LANDMARK_LOADER_ID = 0;
 
-    private Landmark currentLandmark;
+    private Destination currentDestination;
     AlertDialog deleteLandmarkDialogConfirm;
     AlertDialog deleteMultipleLandmarkDialogConfirm;
     LoaderManager.LoaderCallbacks<Cursor> cursorLoaderCallbacks;
-    LandmarksListRowAdapter landmarksListRowAdapter;
+    ListRowDestinationAdapter listRowDestinationAdapter;
     private String currentSearchQuery;
     private LandmarkOnQueryTextListener landmarkOnQueryTextListener;
     private Parcelable recyclerViewScrollPosition;
@@ -94,11 +94,11 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
 
     private int currentTripId;
 
-    private HashMap<Integer, Landmark> multiSelectedLandmarksMap = new HashMap<Integer, Landmark>();
+    private HashMap<Integer, Destination> multiSelectedLandmarksMap = new HashMap<Integer, Destination>();
     private boolean isMultipleSelect = false;
 
     public interface OnSetCurrentLandmark {
-        void onSetCurrentLandmark(Landmark landmark);
+        void onSetCurrentLandmark(Destination destination);
     }
 
     public interface GetCurrentTripTitle {
@@ -118,9 +118,9 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState != null){
-            currentLandmark = savedInstanceState.getParcelable(saveCurrentLandmark);
+            currentDestination = savedInstanceState.getParcelable(saveCurrentLandmark);
             currentSearchQuery = savedInstanceState.getString(saveCurrentSearchQuery);
-            multiSelectedLandmarksMap = ((HashMap<Integer, Landmark>)savedInstanceState.getSerializable(saveSelectedLandmarks));
+            multiSelectedLandmarksMap = ((HashMap<Integer, Destination>)savedInstanceState.getSerializable(saveSelectedLandmarks));
             isMultipleSelect = savedInstanceState.getBoolean(saveIsMultipleSelected);
             recyclerViewScrollPosition = savedInstanceState.getParcelable(saveRecyclerViewScrollPosition);
         }
@@ -131,7 +131,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View parentView = inflater.inflate(R.layout.fragment_landmarks_list, container, false);
-        currentTripId = mCallbackGetCurrentTripId.onGetCurrentTripId();
+        currentTripId = mCallbackGetCurrentTripId.onGetCurrentTripID();
 
         loadingSpinner = parentView.findViewById(R.id.landmarks_main_progress_bar_loading_spinner);
         loadingSpinner.setVisibility(View.VISIBLE);
@@ -152,12 +152,12 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
         landmarksRecyclerView = parentView.findViewById(R.id.landmarks_recycler_view);
         landmarksRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         landmarksRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        if (landmarksListRowAdapter == null ) {
-            landmarksListRowAdapter = new LandmarksListRowAdapter(getActivity(), LandmarksListFragment.this, null, currentSearchQuery);
+        if (listRowDestinationAdapter == null ) {
+            listRowDestinationAdapter = new ListRowDestinationAdapter(getActivity(), DestinationListFragment.this, null, currentSearchQuery);
         }
         // set map if needed
 
-        landmarksRecyclerView.setAdapter(landmarksListRowAdapter);
+        landmarksRecyclerView.setAdapter(listRowDestinationAdapter);
 
         // init the cursorLoader
         cursorLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -178,7 +178,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
 
                 // Swap the new cursor in. (The framework will take care of closing the
                 // old cursor once we return.)
-                landmarksListRowAdapter.swapCursor(cursor);
+                listRowDestinationAdapter.swapCursor(cursor);
 
                 setRecyclerViewPosition(cursor);
             }
@@ -188,7 +188,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
                 // This is called when the last Cursor provided to onLoadFinished()
                 // above is about to be closed.  We need to make sure we are no
                 // longer using it.
-                landmarksListRowAdapter.swapCursor(null);
+                listRowDestinationAdapter.swapCursor(null);
             }
         };
 
@@ -203,10 +203,10 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
         FloatingActionButton AddFab = parentView.findViewById(R.id.landmarks_main_floating_action_button);
         AddFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((LandmarkMainActivity) getActivity()).currentLandmark = null;
-                LandmarkDetailsFragment newFragment = new LandmarkDetailsFragment();
+                ((DestinationMainActivity) getActivity()).currentDestination = null;
+                DestinationDetailsFragment newFragment = new DestinationDetailsFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.landmark_main_fragment_container, newFragment, LandmarkDetailsFragment.TAG);
+                transaction.replace(R.id.landmark_main_fragment_container, newFragment, DestinationDetailsFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -221,7 +221,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
-        mCallbackGetCurrentTripId = StartActivityUtils.onAttachCheckInterface(activity, OnGetCurrentTripId.class);
+        mCallbackGetCurrentTripId = StartActivityUtils.onAttachCheckInterface(activity, OnGetCurrentTripID.class);
         mSetCurrentLandmarkCallback = StartActivityUtils.onAttachCheckInterface(activity, OnSetCurrentLandmark.class);
         mCallbackGetCurrentTripTitle = StartActivityUtils.onAttachCheckInterface(activity, GetCurrentTripTitle.class);
         mCallbackGetIsLandmarkAdded = StartActivityUtils.onAttachCheckInterface(activity, OnGetIsLandmarkAdded.class);
@@ -229,12 +229,12 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
     }
 
     @Override
-    public void onOpenLandmarkDetailsForView(Landmark landmark) {
-        currentLandmark = landmark;
-        mSetCurrentLandmarkCallback.onSetCurrentLandmark(landmark);
-        LandmarkViewDetailsFragment newFragment = new LandmarkViewDetailsFragment();
+    public void onOpenLandmarkDetailsForView(Destination destination) {
+        currentDestination = destination;
+        mSetCurrentLandmarkCallback.onSetCurrentLandmark(destination);
+        DestinationViewDetailsFragment newFragment = new DestinationViewDetailsFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.landmark_main_fragment_container, newFragment, LandmarkViewDetailsFragment.TAG);
+        transaction.replace(R.id.landmark_main_fragment_container, newFragment, DestinationViewDetailsFragment.TAG);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -273,7 +273,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
         // Check which request it is that we're responding to
         if (requestCode == LANDMARK_DIALOG) {
             if (resultCode == Activity.RESULT_OK) {
-                LandmarkOptionsDialogFragment.DialogOptions whichOptionEnum = (LandmarkOptionsDialogFragment.DialogOptions) data.getSerializableExtra(LANDMARK_DIALOG_OPTION);
+                DestinationOptionDialogFragment.DialogOptions whichOptionEnum = (DestinationOptionDialogFragment.DialogOptions) data.getSerializableExtra(LANDMARK_DIALOG_OPTION);
                 switch (whichOptionEnum) {
                     case EDIT:
                         onOpenLandmarkDetailsForUpdate();
@@ -283,7 +283,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
                         deleteLandmarkDialogConfirm.show();
                         break;
                     case VIEW:
-                        onOpenLandmarkDetailsForView(currentLandmark);
+                        onOpenLandmarkDetailsForView(currentDestination);
                         break;
                 }
             }
@@ -291,25 +291,25 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
     }
 
     public void onOpenLandmarkDetailsForUpdate() {
-        LandmarkDetailsFragment updateFragment = new LandmarkDetailsFragment();
+        DestinationDetailsFragment updateFragment = new DestinationDetailsFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.landmark_main_fragment_container, updateFragment, LandmarkDetailsFragment.TAG);
+        transaction.replace(R.id.landmark_main_fragment_container, updateFragment, DestinationDetailsFragment.TAG);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     public void onDeleteLandmarkDialog() {
-        // delete current landmark
+        // delete current Destination
         getActivity().getContentResolver().delete(
-                ContentUris.withAppendedId(MyContentProvider.CONTENT_LANDMARK_ID_URI_BASE, currentLandmark.getId()),
+                ContentUris.withAppendedId(MyContentProvider.CONTENT_LANDMARK_ID_URI_BASE, currentDestination.getId()),
                 null,
                 null);
     }
 
     public void onDeleteMultipleLandmarks() {
-        for (Landmark landmark : multiSelectedLandmarksMap.values()) {
+        for (Destination destination : multiSelectedLandmarksMap.values()) {
             getActivity().getContentResolver().delete(
-                    ContentUris.withAppendedId(MyContentProvider.CONTENT_LANDMARK_ID_URI_BASE, landmark.getId()),
+                    ContentUris.withAppendedId(MyContentProvider.CONTENT_LANDMARK_ID_URI_BASE, destination.getId()),
                     null,
                     null);
         }
@@ -340,7 +340,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
                     public void onClick(DialogInterface dialog, int whichButton) {
                         onDeleteMultipleLandmarks();
                         dialog.dismiss();
-                        landmarksListRowAdapter.handleFinishActionMode();
+                        listRowDestinationAdapter.handleFinishActionMode();
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.landmark_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
@@ -357,7 +357,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(saveCurrentLandmark, currentLandmark);
+        outState.putParcelable(saveCurrentLandmark, currentDestination);
         outState.putString(saveCurrentSearchQuery, currentSearchQuery);
         outState.putSerializable(saveSelectedLandmarks, multiSelectedLandmarksMap);
         outState.putBoolean(saveIsMultipleSelected, isMultipleSelect);
@@ -425,7 +425,7 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
             searchView.setQuery(searchQuery, true);
         }
 
-        //check if i'm the last trip and the quick landmark window is closed
+        //check if i'm the last trip and the quick Destination window is closed
         MenuItem showQuickLandmarks =  menu.findItem(R.id.show_quick_landmarks_option_item);
         MenuItem hideQuickLandmarks =  menu.findItem(R.id.hide_quick_landmarks_option_item);
         Trip lastTrip = DatabaseUtils.getLastTrip(getActivity());
@@ -448,8 +448,8 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
         }
 
         currentSearchQuery = query;
-        if (landmarksListRowAdapter != null) {
-            landmarksListRowAdapter.getFilter().filter(query);
+        if (listRowDestinationAdapter != null) {
+            listRowDestinationAdapter.getFilter().filter(query);
         }
     }
 
@@ -481,20 +481,20 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
 
             case R.id.view_map_item:
                 if(LocationUtils.checkPlayServices(getActivity(), true)) {
-                    Intent mapIntent = new Intent(getActivity(), LandmarkMultiMap.class);
+                    Intent mapIntent = new Intent(getActivity(), DestinationMultiMap.class);
                     Bundle gpsLocationBundle = new Bundle();
-                    ArrayList<Landmark> landmarkArray = new ArrayList();
+                    ArrayList<Destination> destinationArray = new ArrayList();
 
-                    Cursor cursor = landmarksListRowAdapter.getOrigCursor();
+                    Cursor cursor = listRowDestinationAdapter.getOrigCursor();
                     if (cursor != null) {
                         if (cursor.moveToFirst()) {
                             do {
-                                Landmark currentLandmark = new Landmark(cursor);
-                                landmarkArray.add(currentLandmark);
+                                Destination currentDestination = new Destination(cursor);
+                                destinationArray.add(currentDestination);
                             } while (cursor.moveToNext());
                         }
 
-                        gpsLocationBundle.putParcelableArrayList(LandmarkMainActivity.LandmarkArrayList, landmarkArray);
+                        gpsLocationBundle.putParcelableArrayList(DestinationMainActivity.LandmarkArrayList, destinationArray);
                         mapIntent.putExtras(gpsLocationBundle);
                         startActivity(mapIntent);
                     }
@@ -537,8 +537,8 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
     public void OnActionItemPress(MenuItem item) {
         int id = item.getItemId();
         if(multiSelectedLandmarksMap.values().size() == 1){
-            currentLandmark = multiSelectedLandmarksMap.values().iterator().next();
-            mSetCurrentLandmarkCallback.onSetCurrentLandmark(currentLandmark);
+            currentDestination = multiSelectedLandmarksMap.values().iterator().next();
+            mSetCurrentLandmarkCallback.onSetCurrentLandmark(currentDestination);
         }
         switch (id) {
             case R.id.multiple_select_action_delete:
@@ -547,18 +547,18 @@ public class LandmarksListFragment extends Fragment implements LandmarksListRowA
                 break;
             case R.id.multiple_select_action_edit:
                 onOpenLandmarkDetailsForUpdate();
-                landmarksListRowAdapter.handleFinishActionMode();
+                listRowDestinationAdapter.handleFinishActionMode();
                 break;
             case R.id.multiple_select_action_view:
-                onOpenLandmarkDetailsForView(currentLandmark);
-                landmarksListRowAdapter.handleFinishActionMode();
+                onOpenLandmarkDetailsForView(currentDestination);
+                listRowDestinationAdapter.handleFinishActionMode();
                 break;
 
         }
     }
 
     @Override
-    public HashMap<Integer, Landmark> onGetSelectedLandmarkMap() {
+    public HashMap<Integer, Destination> onGetSelectedLandmarkMap() {
         return multiSelectedLandmarksMap;
     }
 

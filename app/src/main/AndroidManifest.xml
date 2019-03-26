@@ -41,10 +41,10 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".landmark.activity.LandmarkSearchResultActivity" />
+                android:value=".destination.activity.LandmarkSearchResultActivity" />
         </activity>
         <activity
-            android:name="com.tripper.tripper.landmark.activity.LandmarkMainActivity"
+            android:name="com.tripper.tripper.destination.activity.DestinationMainActivity"
             android:excludeFromRecents="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -88,10 +88,10 @@
                 android:resource="@xml/widget_location_info" />
         </receiver>
 
-        <activity android:name="com.tripper.tripper.landmark.activity.LandmarkSingleMap" />
-        <activity android:name="com.tripper.tripper.landmark.activity.LandmarkMultiMap" />
+        <activity android:name="com.tripper.tripper.destination.activity.SingleDestinationMap" />
+        <activity android:name="com.tripper.tripper.destination.activity.DestinationMultiMap" />
         <activity
-            android:name="com.tripper.tripper.landmark.activity.LandmarkAddMultipleFromGalleryActivity"
+            android:name="com.tripper.tripper.destination.activity.AddMultipleDestinationFromGalleryActivity"
             android:excludeFromRecents="true"
             android:theme="@style/ThemeForTranslucent">
             <intent-filter>

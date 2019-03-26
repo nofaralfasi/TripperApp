@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.utils.DateUtils;
@@ -146,17 +146,17 @@ public class SearchResultCursorTreeAdapter extends CursorTreeAdapter {
                 TextView date = view.findViewById(R.id.landmark_search_result_date_text_view);
                 ImageView coverPhoto = view.findViewById(R.id.landmark_search_result_image_view);
 
-                final Landmark landmark = new Landmark(cursor);
+                final Destination destination = new Destination(cursor);
 
                 String tripTitleString = cursor.getString(cursor.getColumnIndexOrThrow(MyContentProvider.SearchLandmarkResults.TRIP_TITLE_COLUMN));
 
                 tripTitle.setText(FormatHtmlText.setUnderline(tripTitleString));
-                title.setHighlightText(landmark.getTitle(), filter);
+                title.setHighlightText(destination.getTitle(), filter);
 
-                location.setHighlightTextOrGone(landmark.getAutomaticLocation(), filter);
-                locationDescription.setHighlightTextOrGone(landmark.getLocationDescription(), filter);
+                location.setHighlightTextOrGone(destination.getAutomaticLocation(), filter);
+                locationDescription.setHighlightTextOrGone(destination.getLocationDescription(), filter);
 
-                String imagePath = landmark.getPhotoPath();
+                String imagePath = destination.getPhotoPath();
                 if (!TextUtils.isEmpty(imagePath)) {
                     coverPhoto.setVisibility(View.VISIBLE);
                     ImageUtils.updatePhotoImageViewByPath(context, imagePath, coverPhoto);
@@ -165,11 +165,11 @@ public class SearchResultCursorTreeAdapter extends CursorTreeAdapter {
                 }
 
                 SimpleDateFormat sdf = DateUtils.getTripListDateFormat();
-                Date dateLandmark = landmark.getDate();
+                Date dateLandmark = destination.getDate();
                 String stringDate = dateLandmark == null ? "" : sdf.format(dateLandmark);
                 date.setText(stringDate);
 
-                view.setTag(landmark);
+                view.setTag(destination);
 
                 break;
             }

@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.activity;
+package com.tripper.tripper.destination.activity;
 
 import android.content.Intent;
 import android.location.Geocoder;
@@ -17,19 +17,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.LocationUtils;
 
 import java.util.Locale;
 
-public class LandmarkSingleMap extends LandmarkMap {
+public class SingleDestinationMap extends DestinationMap {
 
-    public static final String TAG = LandmarkSingleMap.class.getSimpleName();
+    public static final String TAG = SingleDestinationMap.class.getSimpleName();
     private static final String SAVE_LANDMARK_LOCATION = "SAVE_LANDMARK_LOCATION";
     private static final String SAVE_LANDMARK_AUTOMATIC_LOCATION = "SAVE_LANDMARK_AUTOMATIC_LOCATION";
 
-    private Landmark lmCurrent;
+    private Destination lmCurrent;
     private int lmSpinnerPosition;
     private Location landmarkLocation;
     private String landmarkAutomaticLocation;
@@ -47,25 +47,25 @@ public class LandmarkSingleMap extends LandmarkMap {
         lmSpinnerPosition = lmCurrent.getTypePosition();
         resultIntent = new Intent();
         landmarkLocation = lmCurrent.getGPSLocation();
-        gcd = new Geocoder(LandmarkSingleMap.this, Locale.getDefault());
+        gcd = new Geocoder(SingleDestinationMap.this, Locale.getDefault());
 
         if(savedInstanceState!= null){
             landmarkLocation = savedInstanceState.getParcelable(SAVE_LANDMARK_LOCATION);
             landmarkAutomaticLocation = savedInstanceState.getString(SAVE_LANDMARK_AUTOMATIC_LOCATION);
-            resultIntent.putExtra(LandmarkMainActivity.LandmarkNewGPSLocation, landmarkLocation);
-            resultIntent.putExtra(LandmarkMainActivity.LandmarkNewLocation, landmarkAutomaticLocation);
+            resultIntent.putExtra(DestinationMainActivity.LandmarkNewGPSLocation, landmarkLocation);
+            resultIntent.putExtra(DestinationMainActivity.LandmarkNewLocation, landmarkAutomaticLocation);
         }
         else {
-        resultIntent.putExtra(LandmarkMainActivity.LandmarkNewGPSLocation, lmCurrent.getGPSLocation());
-        resultIntent.putExtra(LandmarkMainActivity.LandmarkNewLocation, lmCurrent.getAutomaticLocation());
+        resultIntent.putExtra(DestinationMainActivity.LandmarkNewGPSLocation, lmCurrent.getGPSLocation());
+        resultIntent.putExtra(DestinationMainActivity.LandmarkNewLocation, lmCurrent.getAutomaticLocation());
         }
 
        findViewsByIdAndSetListeners();
 
         setResult(RESULT_CANCELED, resultIntent);
 
-//        resultIntent.putExtra(LandmarkMainActivity.LandmarkNewGPSLocation, lmCurrent.getGPSLocation());
-//        resultIntent.putExtra(LandmarkMainActivity.LandmarkNewLocation, lmCurrent.getAutomaticLocation());
+//        resultIntent.putExtra(DestinationMainActivity.LandmarkNewGPSLocation, lmCurrent.getGPSLocation());
+//        resultIntent.putExtra(DestinationMainActivity.LandmarkNewLocation, lmCurrent.getAutomaticLocation());
     }
 
     private void findViewsByIdAndSetListeners(){
@@ -145,7 +145,7 @@ public class LandmarkSingleMap extends LandmarkMap {
         updateAddressLocation(point);
 
         if (isUpdateAutomaticLocation) {
-            // save the new landmark GPS location and string location
+            // save the new Destination GPS location and string location
             updateAutomaticLocation();
         }
     }
@@ -156,7 +156,7 @@ public class LandmarkSingleMap extends LandmarkMap {
 
 
     public void setLandmarkAutomaticLocation(String landmarkAutomaticLocation) {
-        resultIntent.putExtra(LandmarkMainActivity.LandmarkNewLocation, landmarkAutomaticLocation);
+        resultIntent.putExtra(DestinationMainActivity.LandmarkNewLocation, landmarkAutomaticLocation);
         this.landmarkAutomaticLocation = landmarkAutomaticLocation;
     }
 
@@ -179,7 +179,7 @@ public class LandmarkSingleMap extends LandmarkMap {
             landmarkLocation.setLatitude(point.latitude);
             landmarkLocation.setLongitude(point.longitude);
         }
-        resultIntent.putExtra(LandmarkMainActivity.LandmarkNewGPSLocation, landmarkLocation);
+        resultIntent.putExtra(DestinationMainActivity.LandmarkNewGPSLocation, landmarkLocation);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class LandmarkSingleMap extends LandmarkMap {
 
             @Override
             protected String doInBackground(Void... params) {
-                return LocationUtils.updateLmLocationString(LandmarkSingleMap.this, landmarkLocation);
+                return LocationUtils.updateLmLocationString(SingleDestinationMap.this, landmarkLocation);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

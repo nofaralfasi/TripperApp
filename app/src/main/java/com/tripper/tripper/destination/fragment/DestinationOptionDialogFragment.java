@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.fragment;
+package com.tripper.tripper.destination.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,16 +11,15 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ListView;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 
-public class LandmarkOptionsDialogFragment extends DialogFragment {
+public class DestinationOptionDialogFragment extends DialogFragment {
 
-    // tag
-    public static final String TAG = LandmarkOptionsDialogFragment.class.getSimpleName();
+    public static final String TAG = DestinationOptionDialogFragment.class.getSimpleName();
 
     private String[] dialogOptionsArray;
     private AlertDialog optionsDialog;
-    private Landmark currentLandmark;
+    private Destination currentDestination;
     public static final String CUR_LANDMARK_PARAM = "CUR_LANDMARK";
   //  private Trip currentTrip;
 
@@ -35,7 +34,7 @@ public class LandmarkOptionsDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         dialogOptionsArray = getResources().getStringArray(R.array.landmarks_settings_dialog_options);
 //        Bundle mArgs = getArguments();
-//        currentLandmark = mArgs.getParcelable(CUR_LANDMARK_PARAM);
+//        currentDestination = mArgs.getParcelable(CUR_LANDMARK_PARAM);
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder optionsDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -43,9 +42,9 @@ public class LandmarkOptionsDialogFragment extends DialogFragment {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                LandmarkOptionsDialogFragment.DialogOptions whichOptionEnum = LandmarkOptionsDialogFragment.DialogOptions.values()[which];
+                DestinationOptionDialogFragment.DialogOptions whichOptionEnum = DestinationOptionDialogFragment.DialogOptions.values()[which];
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(LandmarksListFragment.LANDMARK_DIALOG_OPTION, whichOptionEnum);
+                resultIntent.putExtra(DestinationListFragment.LANDMARK_DIALOG_OPTION, whichOptionEnum);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), getActivity().RESULT_OK, resultIntent);
             }
         });

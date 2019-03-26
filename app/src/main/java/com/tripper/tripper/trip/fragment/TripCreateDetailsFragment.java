@@ -146,7 +146,7 @@ public class TripCreateDetailsFragment extends Fragment {
             // update the notification with new title only if its the last trip
             Trip latestTrip = DatabaseUtils.getLastTrip(getActivity());
             if( (latestTrip != null && latestTrip.getId() == tripId)) {
-                //a new trip is created, so reopen the quick landmark option
+                //a new trip is created, so reopen the quick Destination option
                 SharedPreferencesUtils.saveCloseNotificationsState(getActivity(), false);
 
                 if (NotificationUtils.areNotificationsEnabled(getActivity())) {

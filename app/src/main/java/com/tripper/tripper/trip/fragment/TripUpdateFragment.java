@@ -52,10 +52,8 @@ import java.util.List;
 
 public class TripUpdateFragment extends Fragment{
 
-    // tag
     public static final String TAG = TripUpdateFragment.class.getSimpleName();
 
-    //photo defines
     private static final int PICK_GALLERY_PHOTO_ACTION = 0;
     private static final int REQUEST_READ_STORAGE_PERMISSION_ACTION = 4;
     static final int DESCRIPTION_DIALOG = 1;
@@ -66,8 +64,6 @@ public class TripUpdateFragment extends Fragment{
 
     private EditText tripStartDateEditText;
     private EditText tripEndDateEditText;
-  //  private Date tripStartDate;
-  //  private Date tripEndDate;
     private EditText tripTitleEditText;
 
     private DatePickerDialog tripStartDatePickerDialog;
@@ -79,7 +75,6 @@ public class TripUpdateFragment extends Fragment{
     private EditText tripPlaceEditText;
     public EditText tripDescriptionEditText;
     private String tripPhotoPath;
-   //  private int currentTripId;
     private Trip currentTrip;
     OnGetCurrentTrip mGetCurrentTripCallback;
 
@@ -90,13 +85,11 @@ public class TripUpdateFragment extends Fragment{
     private String newTakePhotoPath;
     public static final String initDescription = "initDescription";
 
-    //photo handle
     private Uri photoURI;
     private boolean isRequestedPermissionFromCamera;
     private String saveIsRequestedPermissionFromCamera = "saveIsRequestedPermissionFromCamera";
     private AlertDialog.Builder photoOptionsDialogBuilder;
 
-    // Trip Photo Dialog Options
     public enum PhotoDialogOptions{
         CHANGE_PICTURE,
         TAKE_PHOTO
@@ -243,7 +236,7 @@ public class TripUpdateFragment extends Fragment{
                     // update the notification with new title only if its the last trip
                     Trip latestTrip = DatabaseUtils.getLastTrip(getActivity());
                     if(latestTrip != null && (latestTrip.getId() == currentTrip.getId())) {
-                        //a new trip is created, so reopen the quick landmark option
+                        //a new trip is created, so reopen the quick Destination option
                         SharedPreferencesUtils.saveCloseNotificationsState(getActivity(), false);
 
                         if (NotificationUtils.areNotificationsEnabled(getActivity())) {

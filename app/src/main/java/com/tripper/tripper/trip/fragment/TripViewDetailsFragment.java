@@ -23,8 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.ImageUtils;
 
@@ -36,7 +36,7 @@ public class TripViewDetailsFragment extends Fragment {
     // tag
     public static final String TAG = TripViewDetailsFragment.class.getSimpleName();
 
-    // Landmark View Details Views
+    // Destination View Details Views
     private TextView tripTitleTextView;
     private ImageView tripPhotoImageView;
     private View tripPhotoFrameLayout;

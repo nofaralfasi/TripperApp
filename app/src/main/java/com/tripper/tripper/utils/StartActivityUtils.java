@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.tripper.tripper.core.Trip;
-import com.tripper.tripper.landmark.activity.LandmarkMainActivity;
+import com.tripper.tripper.destination.activity.DestinationMainActivity;
 
 public class StartActivityUtils {
     public static final int  NOT_JUMP_TO_LANDMARK_ID = -1;
 
     public static void startLandmarkMainActivity(Activity activity, Trip currentTrip, int landmarkId) {
-        Intent intent = new Intent(activity, LandmarkMainActivity.class);
-        intent.putExtra(LandmarkMainActivity.CURRENT_TRIP_PARAM, currentTrip);
-        intent.putExtra(LandmarkMainActivity.CURRENT_LANDMARK_ID_PARAM, landmarkId);
+        Intent intent = new Intent(activity, DestinationMainActivity.class);
+        intent.putExtra(DestinationMainActivity.CURRENT_TRIP_PARAM, currentTrip);
+        intent.putExtra(DestinationMainActivity.CURRENT_LANDMARK_ID_PARAM, landmarkId);
 
         activity.startActivity(intent);
     }

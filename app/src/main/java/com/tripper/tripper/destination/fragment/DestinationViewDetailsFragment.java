@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.fragment;
+package com.tripper.tripper.destination.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,24 +25,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.landmark.interfaces.OnGetCurrentLandmark;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
+import com.tripper.tripper.destination.interfaces.OnGetCurrentDestination;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.LocationUtils;
 
 import java.text.SimpleDateFormat;
 
-/**
- * Created by david on 12/19/2016.
- */
+public class DestinationViewDetailsFragment extends Fragment {
 
-public class LandmarkViewDetailsFragment extends Fragment {
+    public static final String TAG = DestinationViewDetailsFragment.class.getSimpleName();
 
-    // tag
-    public static final String TAG = LandmarkViewDetailsFragment.class.getSimpleName();
-
-    // Landmark View Details Views
+    // Destination View Details Views
     private TextView lmTitleTextView;
     private ImageView lmPhotoImageView;
     private View lmPhotoFrameLayout;
@@ -56,9 +51,9 @@ public class LandmarkViewDetailsFragment extends Fragment {
 
 
     // Private parameters
-    private Landmark currentLandmark;
+    private Destination currentDestination;
     private View parentView;
-    private OnGetCurrentLandmark mCallback;
+    private OnGetCurrentDestination mCallback;
     private SimpleDateFormat dateFormatter;
 
     // Hold a reference to the current animator,
@@ -75,7 +70,7 @@ public class LandmarkViewDetailsFragment extends Fragment {
 
         parentView = inflater.inflate(R.layout.fragment_landmark_view_details, container, false);
 
-        // initialize landmark date parameters
+        // initialize Destination date parameters
         dateFormatter = DateUtils.getFormDateTimeFormat();
 
         findViewsById(parentView);
@@ -87,9 +82,9 @@ public class LandmarkViewDetailsFragment extends Fragment {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(false);
 
-        currentLandmark = mCallback.onGetCurrentLandmark();
-        if (currentLandmark != null) {
-            // We were called from Update Landmark need to update parameters
+        currentDestination = mCallback.onGetCurrentDestination();
+        if (currentDestination != null) {
+            // We were called from Update Destination need to update parameters
             updateLmParameters();
         }
 
@@ -109,10 +104,10 @@ public class LandmarkViewDetailsFragment extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnGetCurrentLandmark) activity;
+            mCallback = (OnGetCurrentDestination) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnGetCurrentLandmark");
+                    + " must implement OnGetCurrentDestination");
         }
     }
 
@@ -131,55 +126,55 @@ public class LandmarkViewDetailsFragment extends Fragment {
         lmDescriptionTextView = parentView.findViewById(R.id.landmark_view_details_description);
     }
 
-    // Update Landmark , need to update landmark Parameters
+    // Update Destination , need to update Destination Parameters
     private void updateLmParameters() {
 
         String[] type = getResources().getStringArray(R.array.landmark_details_type_spinner_array);
         TypedArray iconType = getResources().obtainTypedArray(R.array.landmark_view_details_icon_type_array);
-        String automaticLocation = currentLandmark.getAutomaticLocation();
+        String automaticLocation = currentDestination.getAutomaticLocation();
         if(automaticLocation == null){
-            automaticLocation = LocationUtils.locationToLatLngString(getActivity(), currentLandmark.getGPSLocation());
+            automaticLocation = LocationUtils.locationToLatLngString(getActivity(), currentDestination.getGPSLocation());
         }
 
         // for each view, if it's not empty set the text, otherwise, set the view as gone.
         setViewStringOrGone(lmTitleTextView,
                 parentView.findViewById(R.id.landmark_view_underline_title),
-                currentLandmark.getTitle());
+                currentDestination.getTitle());
         setViewStringOrGone(lmDateTextView,
                 null,
-                dateFormatter.format(currentLandmark.getDate()));
+                dateFormatter.format(currentDestination.getDate()));
         setViewStringOrGone(lmAutomaticLocationTextView,
                 parentView.findViewById(R.id.landmark_view_uperline_automatic_location),
                 automaticLocation);
         setViewStringOrGone(lmLocationDescriptionTextView,
                 parentView.findViewById(R.id.landmark_view_uperline_location_description),
-                currentLandmark.getLocationDescription());
+                currentDestination.getLocationDescription());
         setViewStringOrGone(lmTypeTextView,
                 parentView.findViewById(R.id.landmark_view_uperline_type),
-                type[currentLandmark.getTypePosition()]);
+                type[currentDestination.getTypePosition()]);
         setViewStringOrGone(lmDescriptionTextView,
                 parentView.findViewById(R.id.landmark_view_uperline_description),
-                currentLandmark.getDescription());
+                currentDestination.getDescription());
 
-        if(currentLandmark.getTypePosition() > 0){
+        if(currentDestination.getTypePosition() > 0){
             lmTypeLayout.setVisibility(View.VISIBLE);
             lmIconTypeImageView.setVisibility(View.VISIBLE);
-            lmIconTypeImageView.setImageResource(iconType.getResourceId(currentLandmark.getTypePosition(), -1));
+            lmIconTypeImageView.setImageResource(iconType.getResourceId(currentDestination.getTypePosition(), -1));
         }
         else{
             lmTypeLayout.setVisibility(View.GONE);
             lmIconTypeImageView.setVisibility(View.GONE);
         }
 
-        if (currentLandmark.getPhotoPath() == null || currentLandmark.getPhotoPath().trim().equals("")) {
+        if (currentDestination.getPhotoPath() == null || currentDestination.getPhotoPath().trim().equals("")) {
             lmPhotoFrameLayout.setVisibility(View.GONE);
         } else {
             lmPhotoFrameLayout.setVisibility(View.VISIBLE);
-            ImageUtils.updatePhotoImageViewByPath(getActivity(), currentLandmark.getPhotoPath(), lmPhotoImageView);
+            ImageUtils.updatePhotoImageViewByPath(getActivity(), currentDestination.getPhotoPath(), lmPhotoImageView);
             lmPhotoImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    zoomImageFromThumb(getActivity(), v, currentLandmark.getPhotoPath());
+                    zoomImageFromThumb(getActivity(), v, currentDestination.getPhotoPath());
                 }
             });
         }
@@ -209,9 +204,9 @@ public class LandmarkViewDetailsFragment extends Fragment {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.edit_item:
-                //move to landmark update details fragment
+                //move to Destination update details fragment
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.landmark_main_fragment_container, new LandmarkDetailsFragment(), LandmarkDetailsFragment.TAG);
+                transaction.replace(R.id.landmark_main_fragment_container, new DestinationDetailsFragment(), DestinationDetailsFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
                 return true;

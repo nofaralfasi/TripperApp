@@ -11,7 +11,7 @@ import com.tripper.tripper.utils.DateUtils;
 
 import java.util.Date;
 
-public class Landmark implements Parcelable {
+public class Destination implements Parcelable {
 
     private String dateFormatString = "YYYY-MM-DDTHH:MM:SS.SSS";
 
@@ -28,7 +28,7 @@ public class Landmark implements Parcelable {
     private String description;
     private int typePosition; //TODO: change it to enum? where to define?
 
-    public Landmark(Cursor cursor){
+    public Destination(Cursor cursor){
         final int COLUMN_ID = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.ID_COLUMN);
         final int COLUMN_TRIP_ID = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.TRIP_ID_COLUMN);
         final int COLUMN_TITLE = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.TITLE_COLUMN);
@@ -66,11 +66,11 @@ public class Landmark implements Parcelable {
         typePosition = cursor.getInt(COLUMN_TYPE_POSITION);
     }
 
-    public Landmark(int tripId, String title, String photoPath, Date date, String automaticLocation, Location GPSLocation, String locationDescription, String description, int typePosition){
+    public Destination(int tripId, String title, String photoPath, Date date, String automaticLocation, Location GPSLocation, String locationDescription, String description, int typePosition){
         this(DEFAULT_ID, tripId, title, photoPath, date, automaticLocation, GPSLocation, locationDescription, description, typePosition);
     }
 
-    public Landmark(int id, int tripId, String title, String photoPath, Date date, String automaticLocation, Location GPSLocation, String locationDescription, String description, int typePosition){
+    public Destination(int id, int tripId, String title, String photoPath, Date date, String automaticLocation, Location GPSLocation, String locationDescription, String description, int typePosition){
         this.id = id;
         this.tripId = tripId;
         this.title = title;
@@ -183,7 +183,7 @@ public class Landmark implements Parcelable {
         return contentValues;
     }
 
-    protected Landmark(Parcel in) {
+    protected Destination(Parcel in) {
         id = in.readInt();
         tripId = in.readInt();
         title = in.readString();
@@ -217,15 +217,15 @@ public class Landmark implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Landmark> CREATOR = new Parcelable.Creator<Landmark>() {
+    public static final Parcelable.Creator<Destination> CREATOR = new Parcelable.Creator<Destination>() {
         @Override
-        public Landmark createFromParcel(Parcel in) {
-            return new Landmark(in);
+        public Destination createFromParcel(Parcel in) {
+            return new Destination(in);
         }
 
         @Override
-        public Landmark[] newArray(int size) {
-            return new Landmark[size];
+        public Destination[] newArray(int size) {
+            return new Destination[size];
         }
     };
 }

@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.activity;
+package com.tripper.tripper.destination.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,26 +8,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.destination.fragment.DestinationDetailsFragment;
+import com.tripper.tripper.destination.fragment.DestinationListFragment;
+import com.tripper.tripper.destination.interfaces.OnGetCurrentDestination;
+import com.tripper.tripper.destination.interfaces.OnGetCurrentTripID;
 import com.tripper.tripper.dialogs.ChangesNotSavedDialogFragment;
-import com.tripper.tripper.landmark.fragment.LandmarkDetailsFragment;
-import com.tripper.tripper.landmark.fragment.LandmarksListFragment;
-import com.tripper.tripper.landmark.interfaces.OnGetCurrentLandmark;
-import com.tripper.tripper.landmark.interfaces.OnGetCurrentTripId;
 import com.tripper.tripper.trip.fragment.TripUpdateFragment;
 import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.StartActivityUtils;
 
-public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurrentTripId,
-        OnGetCurrentLandmark, OnGetCurrentTrip, LandmarksListFragment.OnSetCurrentLandmark, LandmarksListFragment.GetCurrentTripTitle,
-        LandmarksListFragment.OnGetIsLandmarkAdded, LandmarkDetailsFragment.OnLandmarkAddedListener,
-        ChangesNotSavedDialogFragment.OnHandleDialogResult, LandmarksListFragment.OnGetMoveToLandmarkId {
+public class DestinationMainActivity extends AppCompatActivity implements OnGetCurrentTripID,
+        OnGetCurrentDestination, OnGetCurrentTrip, DestinationListFragment.OnSetCurrentLandmark, DestinationListFragment.GetCurrentTripTitle,
+        DestinationListFragment.OnGetIsLandmarkAdded, DestinationDetailsFragment.OnLandmarkAddedListener,
+        ChangesNotSavedDialogFragment.OnHandleDialogResult, DestinationListFragment.OnGetMoveToLandmarkId {
 
-    // tag
-    public static final String TAG = LandmarkMainActivity.class.getSimpleName();
+    public static final String TAG = DestinationMainActivity.class.getSimpleName();
 
     public static final String CURRENT_TRIP_PARAM = "CURRENT_TRIP_PARAM";
     public static final String CURRENT_LANDMARK_ID_PARAM = "CURRENT_LANDMARK_ID_PARAM";
@@ -35,7 +34,7 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
     private static final String SAVE_TRIP = "SAVE_TRIP";
     private static final String SAVE_LANDMARK = "SAVE_LANDMARK";
     private static final String SAVE_IS_LANDMARK_ADDED = "SAVE_IS_LANDMARK_ADDED";
-    public Landmark currentLandmark;
+    public Destination currentDestination;
     private Trip currentTrip;
     private int moveToLandmarkId;
     private boolean isLandmarkAdded;
@@ -52,7 +51,7 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
         setContentView(R.layout.activity_landmark_main);
 
         if (savedInstanceState != null){
-            currentLandmark = savedInstanceState.getParcelable(SAVE_LANDMARK);
+            currentDestination = savedInstanceState.getParcelable(SAVE_LANDMARK);
             currentTrip = savedInstanceState.getParcelable(SAVE_TRIP);
             isLandmarkAdded = savedInstanceState.getBoolean(SAVE_IS_LANDMARK_ADDED);
         }
@@ -82,10 +81,10 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
 
                 if (findViewById(R.id.landmark_main_fragment_container) != null) {
                     if (getFragmentManager().findFragmentById(R.id.landmark_main_fragment_container) == null) {
-                        LandmarksListFragment fragment = new LandmarksListFragment();
+                        DestinationListFragment fragment = new DestinationListFragment();
                         getFragmentManager()
                                 .beginTransaction()
-                                .add(R.id.landmark_main_fragment_container, fragment, LandmarksListFragment.TAG)
+                                .add(R.id.landmark_main_fragment_container, fragment, DestinationListFragment.TAG)
                                 .commit();
                     }
                 }
@@ -96,12 +95,12 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVE_LANDMARK, currentLandmark);
+        outState.putParcelable(SAVE_LANDMARK, currentDestination);
         outState.putParcelable(SAVE_TRIP, currentTrip);
         outState.putBoolean(SAVE_IS_LANDMARK_ADDED, isLandmarkAdded);
     }
 
-    //----------add landmark from gallery------------//
+    //----------add Destination from gallery------------//
     private void handleSentImage(Intent intent) {
         Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
@@ -109,48 +108,48 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
             if (findViewById(R.id.landmark_main_fragment_container) != null) {
                 if (getFragmentManager().findFragmentById(R.id.landmark_main_fragment_container) == null)
                 {
-                    LandmarkDetailsFragment fragment = new LandmarkDetailsFragment();
+                    DestinationDetailsFragment fragment = new DestinationDetailsFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString(IMAGE_FROM_GALLERY_PATH, imageFromGalleryPath);
                     fragment.setArguments(bundle);
                     getFragmentManager()
                             .beginTransaction()
-                            .add(R.id.landmark_main_fragment_container, fragment, LandmarkDetailsFragment.TAG)
+                            .add(R.id.landmark_main_fragment_container, fragment, DestinationDetailsFragment.TAG)
                             .commit();
                 }
             }
         }
     }
 
-    //----------add landmark from gallery------------//
+    //----------add Destination from gallery------------//
     private void handleNotificationAction() {
         if (findViewById(R.id.landmark_main_fragment_container) != null) {
             if (getFragmentManager().findFragmentById(R.id.landmark_main_fragment_container) == null) {
-                LandmarkDetailsFragment fragment = new LandmarkDetailsFragment();
+                DestinationDetailsFragment fragment = new DestinationDetailsFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(NotificationUtils.NOTIFICATION_ADD_LANDMARK_ACTION_STR, NotificationUtils.NOTIFICATION_ADD_LANDMARK_ACTION_STR);
                 fragment.setArguments(bundle);
                 getFragmentManager()
                         .beginTransaction()
-                        .add(R.id.landmark_main_fragment_container, fragment, LandmarkDetailsFragment.TAG)
+                        .add(R.id.landmark_main_fragment_container, fragment, DestinationDetailsFragment.TAG)
                         .commit();
             }
         }
     }
 
     @Override
-    public void onSetCurrentLandmark(Landmark landmark) {
-        currentLandmark = landmark;
+    public void onSetCurrentLandmark(Destination destination) {
+        currentDestination = destination;
     }
 
     @Override
-    public int onGetCurrentTripId() {
+    public int onGetCurrentTripID() {
         return currentTrip.getId();
     }
 
     @Override
-    public Landmark onGetCurrentLandmark() {
-        return currentLandmark;
+    public Destination onGetCurrentDestination() {
+        return currentDestination;
     }
 
     @Override
@@ -195,11 +194,11 @@ public class LandmarkMainActivity extends AppCompatActivity implements OnGetCurr
 
     @Override
     public void onBackPressed() {
-        LandmarkDetailsFragment landmarkDetailsFragment = (LandmarkDetailsFragment)getFragmentManager().findFragmentByTag(LandmarkDetailsFragment.TAG);
+        DestinationDetailsFragment destinationDetailsFragment = (DestinationDetailsFragment)getFragmentManager().findFragmentByTag(DestinationDetailsFragment.TAG);
         TripUpdateFragment tripUpdateFragment = (TripUpdateFragment)getFragmentManager().findFragmentByTag(TripUpdateFragment.TAG);
-        if (landmarkDetailsFragment != null && landmarkDetailsFragment.isVisible()) {
+        if (destinationDetailsFragment != null && destinationDetailsFragment.isVisible()) {
             ChangesNotSavedDialogFragment notSavedDialog = new ChangesNotSavedDialogFragment();
-            notSavedDialog.setTargetFragment(landmarkDetailsFragment, ChangesNotSavedDialogFragment.NOT_SAVED_DIALOG);
+            notSavedDialog.setTargetFragment(destinationDetailsFragment, ChangesNotSavedDialogFragment.NOT_SAVED_DIALOG);
             notSavedDialog.show(getFragmentManager(), "Not_saved_dialog");
         }
         else{

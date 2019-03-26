@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.adapter;
+package com.tripper.tripper.destination.adapter;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.StartActivityUtils;
@@ -35,10 +35,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListRowAdapter.LandmarkViewHolder> implements Filterable {
+public class ListRowDestinationAdapter extends RecyclerView.Adapter<ListRowDestinationAdapter.LandmarkViewHolder> implements Filterable {
 
-    // tag
-    public static final String TAG = LandmarksListRowAdapter.class.getSimpleName();
+    public static final String TAG = ListRowDestinationAdapter.class.getSimpleName();
 
     private LandmarkCursorAdapter landmarkCursorAdapter;
     private OnOpenLandmarkDetailsForUpdate mCallbackSetCurLandmark;
@@ -97,7 +96,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            LandmarksListRowAdapter.this.notifyDataSetChanged();
+            ListRowDestinationAdapter.this.notifyDataSetChanged();
             mActionMode = null;
             mCallbackMultipleSelectHandle.setIsMultipleSelect(false);
             mCallbackMultipleSelectHandle.onClearSelectedLandmarkMap();
@@ -113,7 +112,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
     }
 
     public interface OnOpenLandmarkDetailsForUpdate {
-        void onOpenLandmarkDetailsForView(Landmark landmark);
+        void onOpenLandmarkDetailsForView(Destination destination);
     }
 
     public interface OnActionItemPress {
@@ -121,13 +120,13 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
     }
 
     public interface OnGetSelectedLandmarkMap {
-        HashMap<Integer, Landmark> onGetSelectedLandmarkMap();
+        HashMap<Integer, Destination> onGetSelectedLandmarkMap();
         void onClearSelectedLandmarkMap();
         boolean getIsMultipleSelect();
         void setIsMultipleSelect(boolean isMultipleSelect);
     }
     // ------------------------ Constructor ----------------------------- //
-    public LandmarksListRowAdapter(Context context, Fragment fragment, Cursor cursor, String filter) {
+    public ListRowDestinationAdapter(Context context, Fragment fragment, Cursor cursor, String filter) {
         mCallbackSetCurLandmark = StartActivityUtils.onAttachCheckInterface(fragment, OnOpenLandmarkDetailsForUpdate.class);
         mCallbackActionItemPress = StartActivityUtils.onAttachCheckInterface(fragment, OnActionItemPress.class);
         mCallbackMultipleSelectHandle = StartActivityUtils.onAttachCheckInterface(fragment, OnGetSelectedLandmarkMap.class);
@@ -152,13 +151,13 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
 
     // ------------------------ RecyclerView.Adapter methods ----------------------------- //
     @Override
-    public LandmarksListRowAdapter.LandmarkViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ListRowDestinationAdapter.LandmarkViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = landmarkCursorAdapter.newView(context, landmarkCursorAdapter.getCursor(), parent);
         return new LandmarkViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(LandmarksListRowAdapter.LandmarkViewHolder holder, int position) {
+    public void onBindViewHolder(ListRowDestinationAdapter.LandmarkViewHolder holder, int position) {
         landmarkCursorAdapter.getCursor().moveToPosition(position);
         landmarkCursorAdapter.bindView(holder.itemView, context, landmarkCursorAdapter.getCursor());
     }
@@ -185,7 +184,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            final Landmark landmark = new Landmark(cursor);
+            final Destination destination = new Destination(cursor);
             int itemViewType = getItemViewType(cursor.getPosition());
             View viewHeader = view.findViewById(R.id.landmark_card_header);
             viewHeader.setVisibility(View.GONE);
@@ -194,7 +193,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
                 case TYPE_HEADER:
                     viewHeader.setVisibility(View.VISIBLE);
                     TextView dateHeaderTextView = view.findViewById(R.id.landmark_header_date_text_view);
-                    Date date = landmark.getDate();
+                    Date date = destination.getDate();
                     SimpleDateFormat sdfHeader = DateUtils.getLandmarkHeaderDateFormat();
                     dateHeaderTextView.setText(sdfHeader.format(date));
 
@@ -210,7 +209,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
 
                     if(isMultiSelect()){
                         selectLandmarkCheckbox.setVisibility(View.VISIBLE);
-                        selectLandmarkCheckbox.setChecked(mCallbackMultipleSelectHandle.onGetSelectedLandmarkMap().containsKey(landmark.getId()));
+                        selectLandmarkCheckbox.setChecked(mCallbackMultipleSelectHandle.onGetSelectedLandmarkMap().containsKey(destination.getId()));
                         if (mActionMode == null) {
                             mActionMode = ((AppCompatActivity)view.getContext()).startActionMode(mActionModeCallback);
                             updateActionModeTitle();
@@ -225,10 +224,10 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
                         @Override
                         public void onClick(View view) {
                             if (isMultiSelect()) {
-                                selectLandmarkCheckbox.setChecked(multi_select(landmark.getId(), landmark));
+                                selectLandmarkCheckbox.setChecked(multi_select(destination.getId(), destination));
                             }
                             else {
-                                mCallbackSetCurLandmark.onOpenLandmarkDetailsForView(landmark);
+                                mCallbackSetCurLandmark.onOpenLandmarkDetailsForView(destination);
                                 AppCompatActivity hostActivity = (AppCompatActivity) view.getContext();
                             }
                         }
@@ -243,11 +242,11 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
                                     mActionMode = view.startActionMode(mActionModeCallback);
                                 }
 
-                                multi_select(landmark.getId(), landmark);
-                                LandmarksListRowAdapter.this.notifyDataSetChanged();
+                                multi_select(destination.getId(), destination);
+                                ListRowDestinationAdapter.this.notifyDataSetChanged();
                             }
                             else {
-                                selectLandmarkCheckbox.setChecked(multi_select(landmark.getId(), landmark));
+                                selectLandmarkCheckbox.setChecked(multi_select(destination.getId(), destination));
                             }
 
                             return true;
@@ -255,18 +254,18 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
                     });
 
                     // set title
-                    title.setHighlightTextOrGone(landmark.getTitle(), filter);
+                    title.setHighlightTextOrGone(destination.getTitle(), filter);
 
                     // set location
-                    locationTextBox.setHighlightTextOrGone(landmark.getAutomaticLocation(), filter);
-                    locationDescriptionTextBox.setHighlightTextOrGone(landmark.getLocationDescription(), filter);
+                    locationTextBox.setHighlightTextOrGone(destination.getAutomaticLocation(), filter);
+                    locationDescriptionTextBox.setHighlightTextOrGone(destination.getLocationDescription(), filter);
 
                     textLayout.setVisibility(title.isGone() && title.isGone() && locationTextBox.isGone()
                                             ? View.GONE :
                                             View.VISIBLE);
 
                     // set image
-                    String imagePath = landmark.getPhotoPath();
+                    String imagePath = destination.getPhotoPath();
                     if (TextUtils.isEmpty(imagePath)) {
                         Picasso.with(context).cancelRequest(landmarkImage);
                         landmarkImage.setImageDrawable(null);
@@ -278,7 +277,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
 
                     // set date
                     SimpleDateFormat sdfData = DateUtils.getLandmarkTimeDateFormat();
-                    dateDataTextView.setText(sdfData.format(landmark.getDate()));
+                    dateDataTextView.setText(sdfData.format(destination.getDate()));
 
                     // start trip row
                     View viewStart = view.findViewById(R.id.landmark_card_start);
@@ -348,7 +347,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
         Filter filter = new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                LandmarksListRowAdapter.this.filter = constraint.toString();
+                ListRowDestinationAdapter.this.filter = constraint.toString();
                 FilterResults res = new FilterResults();
 
                 if (landmarkCursorAdapter.getCursor() == null) {
@@ -371,7 +370,7 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
                 }
 
                 landmarkCursorAdapter.swapCursor((Cursor)(results.values));
-                LandmarksListRowAdapter.this.notifyDataSetChanged();
+                ListRowDestinationAdapter.this.notifyDataSetChanged();
                 mCallbackFilterPublishResults.onFilterPublishResults(landmarkCursorAdapter.getCount());
             }
         };
@@ -480,14 +479,14 @@ public class LandmarksListRowAdapter extends RecyclerView.Adapter<LandmarksListR
     //----------multiple select---------------
     // Add/Remove the item from/to the list
 
-    public boolean multi_select(int landmarkId, Landmark landmark) {
+    public boolean multi_select(int landmarkId, Destination destination) {
         boolean res = false;
         if (mActionMode != null) {
             if (mCallbackMultipleSelectHandle.onGetSelectedLandmarkMap().containsKey(landmarkId)) {
                 mCallbackMultipleSelectHandle.onGetSelectedLandmarkMap().remove(Integer.valueOf(landmarkId));
             }
             else {
-                mCallbackMultipleSelectHandle.onGetSelectedLandmarkMap().put(landmarkId, landmark);
+                mCallbackMultipleSelectHandle.onGetSelectedLandmarkMap().put(landmarkId, destination);
                 res = true;
             }
             updateActionModeTitle();

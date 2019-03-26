@@ -1,4 +1,4 @@
-package com.tripper.tripper.landmark.activity;
+package com.tripper.tripper.destination.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -17,7 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.dialogs.NoTripsDialogFragment;
 import com.tripper.tripper.services.MyContentProvider;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class LandmarkAddMultipleFromGalleryActivity extends Activity implements NoTripsDialogFragment.NoTripDialogClickListener{
+public class AddMultipleDestinationFromGalleryActivity extends Activity implements NoTripsDialogFragment.NoTripDialogClickListener{
 
     private static final int REQUEST_READ_STORAGE_PERMISSION_ACTION = 0;
     private static final int NO_TRIPS_DIALOG = 1;
@@ -95,7 +95,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
                 super.onPreExecute();
                 imageUris = multiplePhotosIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                 if (imageUris != null) {
-                    lastTrip = DatabaseUtils.getLastTrip(LandmarkAddMultipleFromGalleryActivity.this);
+                    lastTrip = DatabaseUtils.getLastTrip(AddMultipleDestinationFromGalleryActivity.this);
                     initProgressDialog(imageUris.size());
                     progressDialog.show();
                 }
@@ -116,7 +116,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
                 super.onPostExecute(aVoid);
 
                 progressDialog.dismiss();
-                Toast.makeText(LandmarkAddMultipleFromGalleryActivity.this, getResources().getString(R.string.toast_landmarks_added_message_success, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMultipleDestinationFromGalleryActivity.this, getResources().getString(R.string.toast_landmarks_added_message_success, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
                 finishAffinity();
             }
 
@@ -130,18 +130,18 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
                             return null;
                         }
                         publishProgress(currentImageIndex);
-                        String currentImagePath = ImageUtils.getRealPathFromURI(LandmarkAddMultipleFromGalleryActivity.this, imageUris.get(currentImageIndex));
+                        String currentImagePath = ImageUtils.getRealPathFromURI(AddMultipleDestinationFromGalleryActivity.this, imageUris.get(currentImageIndex));
 
-                        Landmark newLandmark = new Landmark(lastTrip.getId(),
+                        Destination newDestination = new Destination(lastTrip.getId(),
                                 "", currentImagePath, DateUtils.getDateOfToday(), "", null, "", "", 0);
 
-                        getDataFromPhotoAndUpdateLandmark(newLandmark);
+                        getDataFromPhotoAndUpdateLandmark(newDestination);
 
 
                         // Insert data to DataBase
                         getContentResolver().insert(
                                 MyContentProvider.CONTENT_LANDMARKS_URI,
-                                newLandmark.landmarkToContentValues());
+                                newDestination.landmarkToContentValues());
 
                     }
 
@@ -198,7 +198,7 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
 //            for (int i = 0; i < imageUris.size(); i++) {
 //                String currentImagePath = ImageUtils.getRealPathFromURI(this, imageUris.get(i));
 //
-//                Landmark newLandmark = new Landmark(lastTrip.getId(),
+//                Destination newLandmark = new Destination(lastTrip.getId(),
 //                        "", currentImagePath, DateUtils.getDateOfToday(), "", null, "" , "", 0);
 //
 //                getDataFromPhotoAndUpdateLandmark(newLandmark);
@@ -249,15 +249,15 @@ public class LandmarkAddMultipleFromGalleryActivity extends Activity implements 
         }
     }
 
-    private void getDataFromPhotoAndUpdateLandmark(Landmark landmark) {
-        ExifInterface exifInterface = ImageUtils.getImageExif(landmark.getPhotoPath());
+    private void getDataFromPhotoAndUpdateLandmark(Destination destination) {
+        ExifInterface exifInterface = ImageUtils.getImageExif(destination.getPhotoPath());
         Date imageDate = ImageUtils.getImageDateFromExif(exifInterface);
         if(imageDate != null) {
-            landmark.setDate(imageDate);
+            destination.setDate(imageDate);
         }
         Location imageLocation = ImageUtils.getImageLocationFromExif(exifInterface);
         if(imageLocation != null) {
-            landmark.setGPSLocation(imageLocation);
+            destination.setGPSLocation(imageLocation);
         }
     }
 

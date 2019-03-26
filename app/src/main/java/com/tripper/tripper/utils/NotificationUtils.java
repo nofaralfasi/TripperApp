@@ -9,8 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.tripper.tripper.R;
+import com.tripper.tripper.destination.activity.DestinationMainActivity;
 import com.tripper.tripper.helpers.CancelNotificationActivity;
-import com.tripper.tripper.landmark.activity.LandmarkMainActivity;
 
 /**
  * Created by david on 1/10/2017.
@@ -29,12 +29,12 @@ public class NotificationUtils {
 
         SharedPreferencesUtils.saveIsNotificationsWindowOpen(context, true);
 
-        // Intent for add landmark action
-        Intent resultIntentAddLandmark = new Intent(context, LandmarkMainActivity.class);
+        // Intent for add Destination action
+        Intent resultIntentAddLandmark = new Intent(context, DestinationMainActivity.class);
         resultIntentAddLandmark.setAction(NOTIFICATION_ADD_LANDMARK_ACTION_STR);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(LandmarkMainActivity.class);
+        stackBuilder.addParentStack(DestinationMainActivity.class);
         stackBuilder.addNextIntent(resultIntentAddLandmark);
 
         PendingIntent resultPendingIntentAddLandmark =

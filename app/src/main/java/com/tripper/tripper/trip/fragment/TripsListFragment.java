@@ -40,7 +40,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Landmark;
+import com.tripper.tripper.core.Destination;
 import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.helpers.SettingsActivity;
 import com.tripper.tripper.services.MyContentProvider;
@@ -267,16 +267,16 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
                 int type = searchAdapter.getChildType(groupPosition, childPosition);
 
                 Trip selectedTrip = null;
-                Landmark selectedLandmark = null;
+                Destination selectedDestination = null;
 
                 switch (type) {
                     case SEARCH_TRIP_LOADER_ID:
                         selectedTrip = (Trip) v.getTag();
                         break;
                     case SEARCH_LANDMARK_LOADER_ID:
-                        selectedLandmark = (Landmark) v.getTag();
+                        selectedDestination = (Destination) v.getTag();
                         Cursor tripCursor = activity.getContentResolver().query(
-                                ContentUris.withAppendedId(MyContentProvider.CONTENT_TRIP_ID_URI_BASE, selectedLandmark.getTripId()),
+                                ContentUris.withAppendedId(MyContentProvider.CONTENT_TRIP_ID_URI_BASE, selectedDestination.getTripId()),
                                 null,
                                 null,
                                 null,
@@ -292,8 +292,8 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
 
                 if (selectedTrip != null) {
                     mSetCurrentTripCallback.onSetCurrentTrip(selectedTrip);
-                    if (selectedLandmark != null) {
-                        StartActivityUtils.startLandmarkMainActivity(getActivity(), selectedTrip, selectedLandmark.getId());
+                    if (selectedDestination != null) {
+                        StartActivityUtils.startLandmarkMainActivity(getActivity(), selectedTrip, selectedDestination.getId());
                     } else {
                         StartActivityUtils.startLandmarkMainActivity(getActivity(), selectedTrip);
                     }
