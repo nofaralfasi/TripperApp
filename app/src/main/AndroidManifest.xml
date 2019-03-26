@@ -124,7 +124,22 @@
             android:excludeFromRecents="true"
             android:theme="@style/ThemeForTranslucent"/>
 
+        <!--mySensor and from lecture-->
         <service android:name=".services.MySensor" />
+
+        <activity android:name=".fromLecture.DBMainActivity" />
+
+        <provider
+            android:name=".fromLecture.UsersProvider"
+            android:authorities="com.example.MyApplication.StudentsProvider" />
+        <service android:name=".fromLecture.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".fromLecture.PushActivity" />
+
 
     </application>
 
