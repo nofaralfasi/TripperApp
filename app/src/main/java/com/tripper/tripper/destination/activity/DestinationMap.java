@@ -55,7 +55,7 @@ public abstract class DestinationMap extends AppCompatActivity implements OnMapR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landmarks_map);
+        setContentView(R.layout.activity_destinations_map);
 
         if (savedInstanceState != null) {
             isFirstLoad = savedInstanceState.getBoolean(SAVE_IS_FIRST_LOAD, false);
@@ -114,7 +114,7 @@ public abstract class DestinationMap extends AppCompatActivity implements OnMapR
             public View getInfoContents(Marker marker) {
 
                 // Getting view from the layout file info_window_layout
-                View v = getLayoutInflater().inflate(R.layout.landmark_card_map_view_layout, null);
+                View v = getLayoutInflater().inflate(R.layout.card_map_view_destination_layout, null);
                 TextView lmTitleTextView = v.findViewById(R.id.landmark_map_card_title_text_view);
                 ImageView lmPhotoImageView = v.findViewById(R.id.landmark_map_card_cover_photo_view);
                 TextView lmDateTextView = v.findViewById(R.id.landmark_map_card_date_text_view);

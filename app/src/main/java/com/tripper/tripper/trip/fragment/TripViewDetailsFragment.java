@@ -143,7 +143,7 @@ public class TripViewDetailsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_trip_details_menusitem, menu);
+        inflater.inflate(R.menu.details_menusitem_trip_fragment, menu);
     }
 
     @Override

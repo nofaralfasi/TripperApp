@@ -11,7 +11,7 @@ public class DestinationSearchResultActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landmark_search_result);
+        setContentView(R.layout.activity_destination_search_result);
 
         handleIntent(getIntent());
     }

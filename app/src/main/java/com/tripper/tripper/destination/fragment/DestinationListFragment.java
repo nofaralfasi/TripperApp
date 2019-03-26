@@ -100,7 +100,7 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View parentView = inflater.inflate(R.layout.fragment_landmarks_list, container, false);
+        View parentView = inflater.inflate(R.layout.fragment_destination_list, container, false);
         currentTripId = mCallbackGetCurrentTripId.onGetCurrentTripID();
 
         loadingSpinner = parentView.findViewById(R.id.landmarks_main_progress_bar_loading_spinner);
@@ -316,7 +316,7 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
     ////////////////////////////////
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_landmarks_timeline_menusitem, menu);
+        inflater.inflate(R.menu.timeline_menusitem_destination_fragment, menu);
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
         searchView.setQueryHint(getResources().getString(R.string.search_hint));

@@ -550,7 +550,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
     ////////////////////////////////
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_trip_list_menusitem, menu);
+        inflater.inflate(R.menu.list_menusitem_trip_fragment, menu);
 
         // Associate searchable configuration with the SearchView
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));

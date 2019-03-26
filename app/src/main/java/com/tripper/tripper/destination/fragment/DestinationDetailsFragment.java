@@ -207,7 +207,7 @@ public class DestinationDetailsFragment extends Fragment implements
         onCreatesOnSavedInstance = savedInstanceState;
 
         // Inflate the layout for this fragment
-        parentView = inflater.inflate(R.layout.fragment_landmark_details, container, false);
+        parentView = inflater.inflate(R.layout.fragment_destination_details, container, false);
 
         // get all private views by id's
         findViewsById(parentView);
@@ -632,7 +632,7 @@ public class DestinationDetailsFragment extends Fragment implements
 
     private void initLmSpinner(View parentView, Bundle savedInstanceState) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(parentView.getContext(),
-                R.array.landmark_details_type_spinner_array, R.layout.landmark_details_spinner_item);
+                R.array.landmark_details_type_spinner_array, R.layout.destination_details_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lmTypeSpinner.setAdapter(adapter);
         if (savedInstanceState == null){

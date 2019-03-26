@@ -48,7 +48,7 @@ public class DestinationMainActivity extends AppCompatActivity implements OnGetC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landmark_main);
+        setContentView(R.layout.activity_destination_main);
 
         if (savedInstanceState != null){
             currentDestination = savedInstanceState.getParcelable(SAVE_LANDMARK);

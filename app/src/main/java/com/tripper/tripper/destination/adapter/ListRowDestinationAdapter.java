@@ -179,7 +179,7 @@ public class ListRowDestinationAdapter extends RecyclerView.Adapter<ListRowDesti
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-            return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.landmark_data_card_timeline_layout, viewGroup, false);
+            return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.data_card_destination_timeline_layout, viewGroup, false);
         }
 
         @Override

@@ -91,7 +91,7 @@
         <activity android:name="com.tripper.tripper.destination.activity.SingleDestinationMap" />
         <activity android:name="com.tripper.tripper.destination.activity.DestinationMultiMap" />
         <activity
-            android:name="com.tripper.tripper.destination.activity.AddMultipleDestinationFromGalleryActivity"
+            android:name="com.tripper.tripper.destination.activity.AddMultiDestinationsFromGalleryActivity"
             android:excludeFromRecents="true"
             android:theme="@style/ThemeForTranslucent">
             <intent-filter>

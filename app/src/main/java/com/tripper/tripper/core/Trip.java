@@ -21,7 +21,7 @@ public class Trip implements Parcelable {
     private Date startDate;
     private Date endDate;
     private String place;
-    private String picture; // TODO: check the true type needed.
+    private String picture;
     private String description;
 
     public Trip(Cursor cursor){

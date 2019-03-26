@@ -94,7 +94,7 @@ public class SearchResultCursorTreeAdapter extends CursorTreeAdapter {
                 break;
 
             case LANDMARK_RESULT_TYPE:
-                childView = LayoutInflater.from(context).inflate(R.layout.landmark_search_result_row_layout, parent, false);
+                childView = LayoutInflater.from(context).inflate(R.layout.search_result_destination_row_layout, parent, false);
                 break;
 
             default:

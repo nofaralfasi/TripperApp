@@ -19,7 +19,7 @@ public class CancelNotificationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification_cancel);
+        setContentView(R.layout.activity_cancel_notification);
 
         if(!SharedPreferencesUtils.getCancelNotificationsWarningDialogState(this)){
             createAndShowDialog();

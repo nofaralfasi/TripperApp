@@ -68,7 +68,7 @@ public class DestinationViewDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        parentView = inflater.inflate(R.layout.fragment_landmark_view_details, container, false);
+        parentView = inflater.inflate(R.layout.fragment_destination_view_details, container, false);
 
         // initialize Destination date parameters
         dateFormatter = DateUtils.getFormDateTimeFormat();
@@ -196,7 +196,7 @@ public class DestinationViewDetailsFragment extends Fragment {
     ////////////////////////////////
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_landmark_details_menusitem, menu);
+        inflater.inflate(R.menu.details_menusitem_destination_fragment, menu);
     }
 
     @Override

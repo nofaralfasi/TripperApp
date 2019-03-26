@@ -29,12 +29,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AddMultipleDestinationFromGalleryActivity extends Activity implements NoTripsDialogFragment.NoTripDialogClickListener{
+public class AddMultiDestinationsFromGalleryActivity extends Activity implements NoTripsDialogFragment.NoTripDialogClickListener {
 
     private static final int REQUEST_READ_STORAGE_PERMISSION_ACTION = 0;
     private static final int NO_TRIPS_DIALOG = 1;
     private static Intent multiplePhotosIntent;
-    private ProgressDialog progressDialog;private AsyncTask<Void, Integer, Void> addLandmarksTask;
+    private ProgressDialog progressDialog;private AsyncTask<Void, Integer, Void> addDestinationsTask;
     private ArrayList<Uri> imageUris;
     private Trip lastTrip;
     private int currentImageIndex;
@@ -43,7 +43,7 @@ public class AddMultipleDestinationFromGalleryActivity extends Activity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landmark_add_multiple_from_gallery);
+        setContentView(R.layout.activity__add_destinations_from_gallery);
 
         if(savedInstanceState != null) {
             currentImageIndex = savedInstanceState.getInt(saveCurrentImage);
@@ -78,24 +78,24 @@ public class AddMultipleDestinationFromGalleryActivity extends Activity implemen
     }
 
     private void createAddMultipleLandmarksTask(){
-        if(addLandmarksTask != null ){
-            if(addLandmarksTask.isCancelled()){
+        if(addDestinationsTask != null ){
+            if(addDestinationsTask.isCancelled()){
                 return;
             }
-            if(addLandmarksTask.getStatus() != AsyncTask.Status.FINISHED){
-                addLandmarksTask.cancel(true);
+            if(addDestinationsTask.getStatus() != AsyncTask.Status.FINISHED){
+                addDestinationsTask.cancel(true);
             }
-            addLandmarksTask = null;
+            addDestinationsTask = null;
         }
 
-        addLandmarksTask = new AsyncTask<Void, Integer, Void>(){
+        addDestinationsTask = new AsyncTask<Void, Integer, Void>(){
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
                 imageUris = multiplePhotosIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                 if (imageUris != null) {
-                    lastTrip = DatabaseUtils.getLastTrip(AddMultipleDestinationFromGalleryActivity.this);
+                    lastTrip = DatabaseUtils.getLastTrip(AddMultiDestinationsFromGalleryActivity.this);
                     initProgressDialog(imageUris.size());
                     progressDialog.show();
                 }
@@ -105,7 +105,7 @@ public class AddMultipleDestinationFromGalleryActivity extends Activity implemen
             @Override
             protected void onProgressUpdate(Integer... values) {
                 super.onProgressUpdate(values);
-                if(addLandmarksTask == null || addLandmarksTask.isCancelled() || addLandmarksTask.getStatus() == Status.FINISHED){
+                if(addDestinationsTask == null || addDestinationsTask.isCancelled() || addDestinationsTask.getStatus() == Status.FINISHED){
                     return;
                 }
                 progressDialog.setProgress(values[0]);
@@ -116,7 +116,7 @@ public class AddMultipleDestinationFromGalleryActivity extends Activity implemen
                 super.onPostExecute(aVoid);
 
                 progressDialog.dismiss();
-                Toast.makeText(AddMultipleDestinationFromGalleryActivity.this, getResources().getString(R.string.toast_landmarks_added_message_success, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMultiDestinationsFromGalleryActivity.this, getResources().getString(R.string.toast_landmarks_added_message_success, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
                 finishAffinity();
             }
 
@@ -126,11 +126,11 @@ public class AddMultipleDestinationFromGalleryActivity extends Activity implemen
                 imageUris = multiplePhotosIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                 if (imageUris != null) {
                     for (; currentImageIndex < imageUris.size(); currentImageIndex++) {
-                        if(addLandmarksTask == null || isCancelled()){
+                        if(addDestinationsTask == null || isCancelled()){
                             return null;
                         }
                         publishProgress(currentImageIndex);
-                        String currentImagePath = ImageUtils.getRealPathFromURI(AddMultipleDestinationFromGalleryActivity.this, imageUris.get(currentImageIndex));
+                        String currentImagePath = ImageUtils.getRealPathFromURI(AddMultiDestinationsFromGalleryActivity.this, imageUris.get(currentImageIndex));
 
                         Destination newDestination = new Destination(lastTrip.getId(),
                                 "", currentImagePath, DateUtils.getDateOfToday(), "", null, "", "", 0);
@@ -190,30 +190,6 @@ public class AddMultipleDestinationFromGalleryActivity extends Activity implemen
         }
     }
 
-//    private void handleLandmarksFromGalleryWhenThereAreTrips() {
-//        ArrayList<Uri> imageUris = multiplePhotosIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-//        if (imageUris != null) {
-//            Trip lastTrip = DatabaseUtils.getLastTrip(this);
-//            progressDialog.show();
-//            for (int i = 0; i < imageUris.size(); i++) {
-//                String currentImagePath = ImageUtils.getRealPathFromURI(this, imageUris.get(i));
-//
-//                Destination newLandmark = new Destination(lastTrip.getId(),
-//                        "", currentImagePath, DateUtils.getDateOfToday(), "", null, "" , "", 0);
-//
-//                getDataFromPhotoAndUpdateLandmark(newLandmark);
-//
-//                // Insert data to DataBase
-//                getContentResolver().insert(
-//                        MyContentProvider.CONTENT_LANDMARKS_URI,
-//                        newLandmark.landmarkToContentValues());
-//            }
-//            progressDialog.dismiss();
-//            Toast.makeText(this, getResources().getString(R.string.toast_landmarks_added_message_success, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
-//            finishAffinity();
-//        }
-//    }
-
     @Override
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -271,11 +247,11 @@ public class AddMultipleDestinationFromGalleryActivity extends Activity implemen
     }
 
     private void clearTask(){
-        if(addLandmarksTask != null){
-            if(!addLandmarksTask.isCancelled()) {
-                addLandmarksTask.cancel(true);
+        if(addDestinationsTask != null){
+            if(!addDestinationsTask.isCancelled()) {
+                addDestinationsTask.cancel(true);
             }
-            addLandmarksTask = null;
+            addDestinationsTask = null;
         }
     }
 }
