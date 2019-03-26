@@ -25,7 +25,7 @@ import java.util.Calendar;
 
 public class WidgetLocationActivity extends Activity implements NoTripsDialogFragment.NoTripDialogClickListener {
 
-    private AsyncTask<Void, Void, String> updateLocationTask;
+    private AsyncTask<Void, Void, String> updateLocationTask; // static add? 26.3
     private ProgressDialog progressDialog;
     private Location currentLocation;
     private static String SAVE_CURRENT_LOCATION = "SAVE_CURRENT_LOCATION";
@@ -57,14 +57,11 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
     private void initProgressDialog(){
         progressDialog = new ProgressDialog(this);
 
-        // Set progress dialog style spinner
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        // Set the progress dialog title and message
         progressDialog.setTitle(getResources().getString(R.string.toast_widget_location_utils_open_title));
         progressDialog.setMessage(getResources().getString(R.string.toast_widget_location_open_massage));
 
-        // Set the progress dialog background color
         progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         progressDialog.setIndeterminate(false);
@@ -83,11 +80,9 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
     private void addLocationLandmark() {
         Trip lastTrip = DatabaseUtils.getLastTrip(this);
         if(lastTrip != null) {
-        //    Location currentLocation = new LocationUtils().getCurrentLocation(this);
             Location currentLocation = new Location("");
             Intent getLocationIntent = new Intent(this, LocationUtilsActivity.class);
             startActivityForResult(getLocationIntent, LocationUtilsActivity.REQUEST_LOCATION_PERMISSION_ACTION);
-         //   startActivity(new Intent(this, LocationUtilsActivity.class));
         }
     }
 

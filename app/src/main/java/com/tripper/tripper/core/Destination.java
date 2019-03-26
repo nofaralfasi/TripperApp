@@ -29,17 +29,17 @@ public class Destination implements Parcelable {
     private int typePosition; //TODO: change it to enum? where to define?
 
     public Destination(Cursor cursor){
-        final int COLUMN_ID = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.ID_COLUMN);
-        final int COLUMN_TRIP_ID = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.TRIP_ID_COLUMN);
-        final int COLUMN_TITLE = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.TITLE_COLUMN);
-        final int COLUMN_PHOTO_PATH = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.PHOTO_PATH_COLUMN);
-        final int COLUMN_DATE = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.DATE_COLUMN);
-        final int COLUMN_AUTOMATIC_LOCATION = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.AUTOMATIC_LOCATION_COLUMN);
-        final int COLUMN_LOCATION_LATITUDE = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.LOCATION_LATITUDE_COLUMN);
-        final int COLUMN_LOCATION_LONGITUDE = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.LOCATION_LONGITUDE_COLUMN);
-        final int COLUMN_LOCATION_DESCRIPTION = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.LOCATION_DESCRIPTION_COLUMN);
-        final int COLUMN_DESCRIPTION = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.DESCRIPTION_COLUMN);
-        final int COLUMN_TYPE_POSITION = cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.TYPE_POSITION_COLUMN);
+        final int COLUMN_ID = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.ID_COLUMN);
+        final int COLUMN_TRIP_ID = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.TRIP_ID_COLUMN);
+        final int COLUMN_TITLE = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.TITLE_COLUMN);
+        final int COLUMN_PHOTO_PATH = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.PHOTO_PATH_COLUMN);
+        final int COLUMN_DATE = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.DATE_COLUMN);
+        final int COLUMN_AUTOMATIC_LOCATION = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.AUTOMATIC_LOCATION_COLUMN);
+        final int COLUMN_LOCATION_LATITUDE = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.LOCATION_LATITUDE_COLUMN);
+        final int COLUMN_LOCATION_LONGITUDE = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.LOCATION_LONGITUDE_COLUMN);
+        final int COLUMN_LOCATION_DESCRIPTION = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.LOCATION_DESCRIPTION_COLUMN);
+        final int COLUMN_DESCRIPTION = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.DESCRIPTION_COLUMN);
+        final int COLUMN_TYPE_POSITION = cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.TYPE_POSITION_COLUMN);
 
         id = cursor.getInt(COLUMN_ID);
         tripId = cursor.getInt(COLUMN_TRIP_ID);
@@ -166,19 +166,19 @@ public class Destination implements Parcelable {
     public ContentValues landmarkToContentValues(){
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MyContentProvider.Landmarks.TITLE_COLUMN, title);
-        contentValues.put(MyContentProvider.Landmarks.TRIP_ID_COLUMN, tripId);
-        contentValues.put(MyContentProvider.Landmarks.DATE_COLUMN, DateUtils.databaseDateToString(date));
-        contentValues.put(MyContentProvider.Landmarks.TITLE_COLUMN, title);
-        contentValues.put(MyContentProvider.Landmarks.AUTOMATIC_LOCATION_COLUMN, automaticLocation);
+        contentValues.put(MyContentProvider.Destinations.TITLE_COLUMN, title);
+        contentValues.put(MyContentProvider.Destinations.TRIP_ID_COLUMN, tripId);
+        contentValues.put(MyContentProvider.Destinations.DATE_COLUMN, DateUtils.databaseDateToString(date));
+        contentValues.put(MyContentProvider.Destinations.TITLE_COLUMN, title);
+        contentValues.put(MyContentProvider.Destinations.AUTOMATIC_LOCATION_COLUMN, automaticLocation);
         if (GPSLocation != null){
-            contentValues.put(MyContentProvider.Landmarks.LOCATION_LATITUDE_COLUMN, GPSLocation.getLatitude());
-            contentValues.put(MyContentProvider.Landmarks.LOCATION_LONGITUDE_COLUMN, GPSLocation.getLongitude());
+            contentValues.put(MyContentProvider.Destinations.LOCATION_LATITUDE_COLUMN, GPSLocation.getLatitude());
+            contentValues.put(MyContentProvider.Destinations.LOCATION_LONGITUDE_COLUMN, GPSLocation.getLongitude());
         }
-        contentValues.put(MyContentProvider.Landmarks.LOCATION_DESCRIPTION_COLUMN, locationDescription);
-        contentValues.put(MyContentProvider.Landmarks.PHOTO_PATH_COLUMN, photoPath);
-        contentValues.put(MyContentProvider.Landmarks.DESCRIPTION_COLUMN, description);
-        contentValues.put(MyContentProvider.Landmarks.TYPE_POSITION_COLUMN, typePosition);
+        contentValues.put(MyContentProvider.Destinations.LOCATION_DESCRIPTION_COLUMN, locationDescription);
+        contentValues.put(MyContentProvider.Destinations.PHOTO_PATH_COLUMN, photoPath);
+        contentValues.put(MyContentProvider.Destinations.DESCRIPTION_COLUMN, description);
+        contentValues.put(MyContentProvider.Destinations.TYPE_POSITION_COLUMN, typePosition);
 
         return contentValues;
     }

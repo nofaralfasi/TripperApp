@@ -39,7 +39,7 @@
         android:layout_alignEnd="@+id/textView2"
         android:layout_alignRight="@+id/textView2"
         android:onClick="onClickAddName"
-        android:text="Add Name"/>
+        android:text="Add User"/>
 
     <EditText
         android:id="@+id/editText"
@@ -58,7 +58,7 @@
         android:layout_alignTop="@+id/editText"
         android:layout_alignEnd="@+id/textView1"
         android:layout_alignRight="@+id/textView1"
-        android:hint="Name"
+        android:hint="Email"
         android:textColorHint="@android:color/holo_blue_light" />
 
     <EditText
@@ -70,7 +70,7 @@
         android:layout_alignLeft="@+id/editText2"
         android:layout_alignEnd="@+id/editText2"
         android:layout_alignRight="@+id/editText2"
-        android:hint="Grade"
+        android:hint="Password"
         android:textColorHint="@android:color/holo_blue_bright" />
 
     <Button

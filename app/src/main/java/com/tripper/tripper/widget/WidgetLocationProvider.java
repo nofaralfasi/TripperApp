@@ -22,13 +22,10 @@ public class WidgetLocationProvider extends AppWidgetProvider {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                 R.layout.widget_location);
 
-        // Create an Intent to launch WidgetLocationActivity
         Intent intent = new Intent(context, WidgetLocationActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK );
         intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         for (int i = 0; i < count; i++) {
             int widgetId = appWidgetIds[i];

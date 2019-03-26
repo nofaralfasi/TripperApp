@@ -42,32 +42,99 @@ public class MyContentProvider extends ContentProvider{
                 DESCRIPTION_COLUMN + " TEXT)";
     }
 
-    public class Landmarks{
-        public final static String TABLE_NAME = "landmarks_table";
-        public final static String ID_COLUMN = "_id";
-        public final static String TRIP_ID_COLUMN = "TRIP_ID";
-        public final static String TITLE_COLUMN = "TITLE";
-        public final static String PHOTO_PATH_COLUMN = "PHOTO_PATH";
-        public final static String DATE_COLUMN = "DATE";
-        public final static String AUTOMATIC_LOCATION_COLUMN = "LOCATION";
-        public final static String LOCATION_LATITUDE_COLUMN = "LOCATION_LATITUDE";
-        public final static String LOCATION_LONGITUDE_COLUMN = "LOCATION_LONGITUDE";
-        public final static String LOCATION_DESCRIPTION_COLUMN = "LOCATION_DESCRIPTION";
-        public final static String DESCRIPTION_COLUMN = "DESCRIPTION";
-        public final static String TYPE_POSITION_COLUMN = "TYPE_POSITION";
+    @Nullable
+    @Override
+    public Cursor query(@NonNull Uri uri, String[] columns, String selection, String[] selectionArgs, String sortOrder) {
+        String id;
+        String finalWhere = "";
+        String tableName = "";
+        String orderBy = "";
+        String rawQuery = null;
 
-        private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +" (" +
-                ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                TRIP_ID_COLUMN + " INTEGER, " +
-                TITLE_COLUMN + " TEXT, " +
-                PHOTO_PATH_COLUMN + " TEXT, " +
-                DATE_COLUMN + " TEXT, " +
-                AUTOMATIC_LOCATION_COLUMN + " TEXT, " +
-                LOCATION_LATITUDE_COLUMN + " DOUBLE, " +
-                LOCATION_LONGITUDE_COLUMN + " DOUBLE, " +
-                LOCATION_DESCRIPTION_COLUMN + " STRING, " +
-                DESCRIPTION_COLUMN + " TEXT, " +
-                TYPE_POSITION_COLUMN + " INTEGER)";
+        if (selection != null && selection.trim().length() > 0)
+        {
+            finalWhere = selection;
+        }
+
+        switch (uriMatcher.match(uri)) {
+            case LANDMARKS:
+                tableName = Destinations.TABLE_NAME;
+                orderBy = Destinations.DATE_COLUMN + " DESC ";
+                break;
+            case TRIPS:
+                tableName = Trips.TABLE_NAME;
+                orderBy = Trips.START_DATE_COLUMN + " DESC ";
+                break;
+
+            case LANDMARK_ID:
+                tableName = Destinations.TABLE_NAME;
+                id = uri.getPathSegments().get(LANDMARKS_ID_PATH_POSITION);
+
+                finalWhere = Destinations.ID_COLUMN + "=" + id;
+
+                if (selection != null && selection.trim().length() > 0)
+                {
+                    finalWhere += selection + " AND " + finalWhere;
+                }
+                break;
+            case TRIP_ID:
+                tableName = Trips.TABLE_NAME;
+                id = uri.getPathSegments().get(TRIPS_ID_PATH_POSITION);
+
+                finalWhere += Trips.ID_COLUMN + "=" + id;
+
+                if (selection != null && selection.trim().length() > 0)
+                {
+                    finalWhere = selection + " AND " + finalWhere;
+                }
+                break;
+
+            case SEARCH_GROUPS:
+                String[] searchColumns = new String[] { SearchGroups.ID_COLUMN, SearchGroups.TITLE_COLUMN };
+
+                MatrixCursor matrixCursor= new MatrixCursor(searchColumns);
+
+                matrixCursor.addRow(new Object[] { 0, "Trips" });
+                matrixCursor.addRow(new Object[] { 1, "Destinations" });
+
+                return matrixCursor;
+
+            case SEARCH_LANDMARK_RESULTS:
+                rawQuery = "SELECT " + Destinations.TABLE_NAME +  ".*, " + Trips.TABLE_NAME + "." + Trips.TITLE_COLUMN + " AS " + SearchLandmarkResults.TRIP_TITLE_COLUMN + " "
+                            + "FROM " + SearchLandmarkResults.TABLE_NAME + " "
+                            + "WHERE " + finalWhere + " "
+                            + "ORDER BY " + Destinations.TABLE_NAME + "." + Destinations.DATE_COLUMN + " DESC ";
+
+                break;
+
+
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        if(sortOrder != null){
+            orderBy += sortOrder;
+        }
+
+        SQLiteDatabase database = handler.getReadableDatabase();
+
+        Cursor cursor;
+        if (!TextUtils.isEmpty(rawQuery)) {
+            cursor = database.rawQuery(rawQuery, selectionArgs);
+        } else {
+            cursor = database.query(tableName, columns, // The columns to return from the query
+                    finalWhere, // The columns for the where clause
+                    selectionArgs, // The values for the where clause
+                    null, // don't group the rows
+                    null, // don't filter by row groups
+                    orderBy // The sort order
+            );
+        }
+
+
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return cursor;
     }
 
     public class SearchGroups {
@@ -75,17 +142,61 @@ public class MyContentProvider extends ContentProvider{
         public final static String TITLE_COLUMN = "TITLE";
     }
 
-    public class SearchLandmarkResults {
-        public final static String TABLE_NAME = Landmarks.TABLE_NAME + " INNER JOIN " + Trips.TABLE_NAME +
-                                                " ON " + Landmarks.TABLE_NAME + "." + Landmarks.TRIP_ID_COLUMN +
-                                                " = " + Trips.TABLE_NAME + "." + Trips.ID_COLUMN;
+    @Nullable
+    @Override
+    public Uri insert(@NonNull Uri uri, ContentValues contentValues) {
+        Uri baseUrl;
+        String tableName;
+        switch (uriMatcher.match(uri))
+        {
+            case LANDMARKS:
+                baseUrl = CONTENT_LANDMARK_ID_URI_BASE;
+                tableName = Destinations.TABLE_NAME;
+                break;
+            case TRIPS:
+                baseUrl = CONTENT_TRIP_ID_URI_BASE;
+                tableName = Trips.TABLE_NAME;
+                break;
 
-        public final static String LANDMARK_TITLE_COLUMN = Landmarks.TABLE_NAME + "." + Landmarks.TITLE_COLUMN;
-        public final static String AUTOMATIC_LOCATION_COLUMN = Landmarks.TABLE_NAME + "." + Landmarks.AUTOMATIC_LOCATION_COLUMN;
-        public final static String LOCATION_DESCRIPTION_COLUMN = Landmarks.TABLE_NAME + "." + Landmarks.LOCATION_DESCRIPTION_COLUMN;
-        public final static String DESCRIPTION_COLUMN = Landmarks.TABLE_NAME + "." + Landmarks.DESCRIPTION_COLUMN;
+            case LANDMARK_ID:
+                baseUrl = CONTENT_LANDMARK_ID_URI_BASE;
+                tableName = Destinations.TABLE_NAME;
+                break;
+            case TRIP_ID:
+                baseUrl = CONTENT_TRIP_ID_URI_BASE;
+                tableName = Trips.TABLE_NAME;
+                break;
 
-        public final static String TRIP_TITLE_COLUMN = "TRIP_TITLE";
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        ContentValues values;
+
+        if (contentValues != null)
+        {
+            values = new ContentValues(contentValues);
+        }
+        else
+        {
+            values = new ContentValues();
+        }
+        SQLiteDatabase db = handler.getWritableDatabase();
+
+        long rowId = db.insert(tableName, null, values);
+
+        if (rowId > 0)
+        {
+            Uri noteUri = ContentUris.withAppendedId(baseUrl, rowId);
+
+            getContext().getContentResolver().notifyChange(noteUri, null);
+            getContext().getContentResolver().notifyChange(CONTENT_SEARCH_LANDMARK_RESULTS_URI, null);
+
+            return noteUri;
+        }
+
+        throw new SQLException("Failed to insert row into " + uri);
+
     }
 
     public final static String AUTHORITY = "com.tripper.tripper";
@@ -165,177 +276,6 @@ public class MyContentProvider extends ContentProvider{
 
     final static private MyContentProvider instance = new MyContentProvider();
 
-    @Nullable
-    @Override
-    public Cursor query(@NonNull Uri uri, String[] columns, String selection, String[] selectionArgs, String sortOrder) {
-        String id;
-        String finalWhere = "";
-        String tableName = "";
-        String orderBy = "";
-        String rawQuery = null;
-
-        if (selection != null && selection.trim().length() > 0)
-        {
-            finalWhere = selection;
-        }
-
-        switch (uriMatcher.match(uri)) {
-            case LANDMARKS:
-                tableName = Landmarks.TABLE_NAME;
-                orderBy = Landmarks.DATE_COLUMN + " DESC ";
-                break;
-            case TRIPS:
-                tableName = Trips.TABLE_NAME;
-                orderBy = Trips.START_DATE_COLUMN + " DESC ";
-                break;
-
-            case LANDMARK_ID:
-                tableName = Landmarks.TABLE_NAME;
-                id = uri.getPathSegments().get(LANDMARKS_ID_PATH_POSITION);
-
-                finalWhere = Landmarks.ID_COLUMN + "=" + id;
-
-                if (selection != null && selection.trim().length() > 0)
-                {
-                    finalWhere += selection + " AND " + finalWhere;
-                }
-                break;
-            case TRIP_ID:
-                tableName = Trips.TABLE_NAME;
-                id = uri.getPathSegments().get(TRIPS_ID_PATH_POSITION);
-
-                finalWhere += Trips.ID_COLUMN + "=" + id;
-
-                if (selection != null && selection.trim().length() > 0)
-                {
-                    finalWhere = selection + " AND " + finalWhere;
-                }
-                break;
-
-            case SEARCH_GROUPS:
-                String[] searchColumns = new String[] { SearchGroups.ID_COLUMN, SearchGroups.TITLE_COLUMN };
-
-                MatrixCursor matrixCursor= new MatrixCursor(searchColumns);
-
-                matrixCursor.addRow(new Object[] { 0, "Trips" });
-                matrixCursor.addRow(new Object[] { 1, "Landmarks" });
-
-                return matrixCursor;
-
-            case SEARCH_LANDMARK_RESULTS:
-                rawQuery = "SELECT " + Landmarks.TABLE_NAME +  ".*, " + Trips.TABLE_NAME + "." + Trips.TITLE_COLUMN + " AS " + SearchLandmarkResults.TRIP_TITLE_COLUMN + " "
-                            + "FROM " + SearchLandmarkResults.TABLE_NAME + " "
-                            + "WHERE " + finalWhere + " "
-                            + "ORDER BY " + Landmarks.TABLE_NAME + "." + Landmarks.DATE_COLUMN + " DESC ";
-
-                break;
-
-
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
-
-        if(sortOrder != null){
-            orderBy += sortOrder;
-        }
-
-        SQLiteDatabase database = handler.getReadableDatabase();
-
-        Cursor cursor;
-        if (!TextUtils.isEmpty(rawQuery)) {
-            cursor = database.rawQuery(rawQuery, selectionArgs);
-        } else {
-            cursor = database.query(tableName, columns, // The columns to return from the query
-                    finalWhere, // The columns for the where clause
-                    selectionArgs, // The values for the where clause
-                    null, // don't group the rows
-                    null, // don't filter by row groups
-                    orderBy // The sort order
-            );
-        }
-
-
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
-        return cursor;
-    }
-
-    @Nullable
-    @Override
-    public String getType(@NonNull Uri uri) {
-        /**
-         * Chooses the MIME type based on the incoming URI pattern
-         */
-        switch (uriMatcher.match(uri)) {
-
-            case LANDMARKS:
-            case TRIPS:
-            case LANDMARK_ID:
-            case TRIP_ID:
-
-
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
-    }
-
-    @Nullable
-    @Override
-    public Uri insert(@NonNull Uri uri, ContentValues contentValues) {
-        Uri baseUrl;
-        String tableName;
-        switch (uriMatcher.match(uri))
-        {
-            case LANDMARKS:
-                baseUrl = CONTENT_LANDMARK_ID_URI_BASE;
-                tableName = Landmarks.TABLE_NAME;
-                break;
-            case TRIPS:
-                baseUrl = CONTENT_TRIP_ID_URI_BASE;
-                tableName = Trips.TABLE_NAME;
-                break;
-
-            case LANDMARK_ID:
-                baseUrl = CONTENT_LANDMARK_ID_URI_BASE;
-                tableName = Landmarks.TABLE_NAME;
-                break;
-            case TRIP_ID:
-                baseUrl = CONTENT_TRIP_ID_URI_BASE;
-                tableName = Trips.TABLE_NAME;
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
-
-        ContentValues values;
-
-        if (contentValues != null)
-        {
-            values = new ContentValues(contentValues);
-        }
-        else
-        {
-            values = new ContentValues();
-        }
-        SQLiteDatabase db = handler.getWritableDatabase();
-
-        long rowId = db.insert(tableName, null, values);
-
-        if (rowId > 0)
-        {
-            Uri noteUri = ContentUris.withAppendedId(baseUrl, rowId);
-
-            getContext().getContentResolver().notifyChange(noteUri, null);
-            getContext().getContentResolver().notifyChange(CONTENT_SEARCH_LANDMARK_RESULTS_URI, null);
-
-            return noteUri;
-        }
-
-        throw new SQLException("Failed to insert row into " + uri);
-
-    }
-
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         String id;
@@ -343,7 +283,7 @@ public class MyContentProvider extends ContentProvider{
         String tableName;
         switch (uriMatcher.match(uri)) {
             case LANDMARKS:
-                tableName = Landmarks.TABLE_NAME;
+                tableName = Destinations.TABLE_NAME;
                 if (selection != null && selection.trim().length() > 0) {
                     finalWhere = selection;
                 }
@@ -357,9 +297,9 @@ public class MyContentProvider extends ContentProvider{
                 break;
 
             case LANDMARK_ID:
-                tableName = Landmarks.TABLE_NAME;
+                tableName = Destinations.TABLE_NAME;
                 id = uri.getPathSegments().get(LANDMARKS_ID_PATH_POSITION);
-                finalWhere = Landmarks.ID_COLUMN + "=" + id;
+                finalWhere = Destinations.ID_COLUMN + "=" + id;
 
                 if (selection != null && selection.trim().length() > 0)
                 {
@@ -401,6 +341,25 @@ public class MyContentProvider extends ContentProvider{
         return -1;
     }
 
+    @Nullable
+    @Override
+    public String getType(@NonNull Uri uri) {
+        /**
+         * Chooses the MIME type based on the incoming URI pattern
+         */
+        switch (uriMatcher.match(uri)) {
+
+            case LANDMARKS:
+            case TRIPS:
+            case LANDMARK_ID:
+            case TRIP_ID:
+
+
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+    }
+
     @Override
     public int update(@NonNull Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         String id;
@@ -410,7 +369,7 @@ public class MyContentProvider extends ContentProvider{
         switch (uriMatcher.match(uri))
         {
             case LANDMARKS:
-                tableName = Landmarks.TABLE_NAME;
+                tableName = Destinations.TABLE_NAME;
                 if (selection != null && selection.trim().length() > 0) {
                     finalWhere = selection;
                 }
@@ -425,10 +384,10 @@ public class MyContentProvider extends ContentProvider{
                 break;
 
             case LANDMARK_ID:
-                tableName = Landmarks.TABLE_NAME;
+                tableName = Destinations.TABLE_NAME;
                 id = uri.getPathSegments().get(LANDMARKS_ID_PATH_POSITION);
 
-                finalWhere = Landmarks.ID_COLUMN + "=" + id;
+                finalWhere = Destinations.ID_COLUMN + "=" + id;
 
                 if (selection != null && selection.trim().length() > 0)
                 {
@@ -473,6 +432,47 @@ public class MyContentProvider extends ContentProvider{
         return -1;
     }
 
+    public class Destinations {
+        public final static String TABLE_NAME = "landmarks_table";
+        public final static String ID_COLUMN = "_id";
+        public final static String TRIP_ID_COLUMN = "TRIP_ID";
+        public final static String TITLE_COLUMN = "TITLE";
+        public final static String PHOTO_PATH_COLUMN = "PHOTO_PATH";
+        public final static String DATE_COLUMN = "DATE";
+        public final static String AUTOMATIC_LOCATION_COLUMN = "LOCATION";
+        public final static String LOCATION_LATITUDE_COLUMN = "LOCATION_LATITUDE";
+        public final static String LOCATION_LONGITUDE_COLUMN = "LOCATION_LONGITUDE";
+        public final static String LOCATION_DESCRIPTION_COLUMN = "LOCATION_DESCRIPTION";
+        public final static String DESCRIPTION_COLUMN = "DESCRIPTION";
+        public final static String TYPE_POSITION_COLUMN = "TYPE_POSITION";
+
+        private final static String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +" (" +
+                ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                TRIP_ID_COLUMN + " INTEGER, " +
+                TITLE_COLUMN + " TEXT, " +
+                PHOTO_PATH_COLUMN + " TEXT, " +
+                DATE_COLUMN + " TEXT, " +
+                AUTOMATIC_LOCATION_COLUMN + " TEXT, " +
+                LOCATION_LATITUDE_COLUMN + " DOUBLE, " +
+                LOCATION_LONGITUDE_COLUMN + " DOUBLE, " +
+                LOCATION_DESCRIPTION_COLUMN + " STRING, " +
+                DESCRIPTION_COLUMN + " TEXT, " +
+                TYPE_POSITION_COLUMN + " INTEGER)";
+    }
+
+    public class SearchLandmarkResults {
+        public final static String TABLE_NAME = Destinations.TABLE_NAME + " INNER JOIN " + Trips.TABLE_NAME +
+                                                " ON " + Destinations.TABLE_NAME + "." + Destinations.TRIP_ID_COLUMN +
+                                                " = " + Trips.TABLE_NAME + "." + Trips.ID_COLUMN;
+
+        public final static String DESTINATION_TITLE_COLUMN = Destinations.TABLE_NAME + "." + Destinations.TITLE_COLUMN;
+        public final static String AUTOMATIC_LOCATION_COLUMN = Destinations.TABLE_NAME + "." + Destinations.AUTOMATIC_LOCATION_COLUMN;
+        public final static String LOCATION_DESCRIPTION_COLUMN = Destinations.TABLE_NAME + "." + Destinations.LOCATION_DESCRIPTION_COLUMN;
+        public final static String DESCRIPTION_COLUMN = Destinations.TABLE_NAME + "." + Destinations.DESCRIPTION_COLUMN;
+
+        public final static String TRIP_TITLE_COLUMN = "TRIP_TITLE";
+    }
+
     private class KeepTripSQLiteHelper extends SQLiteOpenHelper{
 
         private final static String DATABASE_NAME = "KeepTrip.db";
@@ -496,12 +496,12 @@ public class MyContentProvider extends ContentProvider{
                 throw new RuntimeException(e.getMessage());
             }
             try{
-                db.execSQL(Landmarks.CREATE_TABLE);
+                db.execSQL(Destinations.CREATE_TABLE);
             }
             catch(SQLiteException e)
             {
                 e.printStackTrace();
-                Log.e(TAG,"Failed to create the Landmarks table");
+                Log.e(TAG,"Failed to create the Destinations table");
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -509,7 +509,7 @@ public class MyContentProvider extends ContentProvider{
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             if (newVersion > oldVersion) {
-                db.execSQL("ALTER TABLE " + Landmarks.TABLE_NAME + " ADD COLUMN " + Landmarks.LOCATION_DESCRIPTION_COLUMN + " STRING");
+                db.execSQL("ALTER TABLE " + Destinations.TABLE_NAME + " ADD COLUMN " + Destinations.LOCATION_DESCRIPTION_COLUMN + " STRING");
             }
         }
     }

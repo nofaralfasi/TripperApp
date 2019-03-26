@@ -169,6 +169,32 @@ public class ListRowDestinationAdapter extends RecyclerView.Adapter<ListRowDesti
         return landmarkCursorAdapter.getCount();
     }
 
+    private CursorWrapper createCursorWrapper(Cursor cursor) {
+        if (cursor == null) {
+            return null;
+        }
+
+        if (TextUtils.isEmpty(this.filter)) {
+            return new CursorWrapper(cursor);
+        } else {
+            String[] columnsToSearch = new String[] {
+                    MyContentProvider.Destinations.TITLE_COLUMN,
+                    MyContentProvider.Destinations.AUTOMATIC_LOCATION_COLUMN,
+                    MyContentProvider.Destinations.LOCATION_DESCRIPTION_COLUMN,
+                    MyContentProvider.Destinations.DESCRIPTION_COLUMN,
+            };
+
+            return new FilterCursorWrapper(cursor, this.filter, columnsToSearch);
+        }
+    }
+
+    public Cursor swapCursor(Cursor newCursor) {
+        Cursor oldCursor = landmarkCursorAdapter.swapCursor(createCursorWrapper(newCursor));
+        this.notifyDataSetChanged();
+        mCallbackFilterPublishResults.onFilterPublishResults(landmarkCursorAdapter.getCount());
+        return oldCursor;
+    }
+
     // ------------------------ CursorAdapter class ----------------------------- //
     private class LandmarkCursorAdapter extends CursorAdapter {
         public TextView title, date;
@@ -301,7 +327,7 @@ public class ListRowDestinationAdapter extends RecyclerView.Adapter<ListRowDesti
             }
 
             // date of current item
-            Date dateCurrent =  DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(MyContentProvider.Landmarks.DATE_COLUMN)));
+            Date dateCurrent =  DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(MyContentProvider.Destinations.DATE_COLUMN)));
 
             if (!cursor.moveToPrevious()){
                 cursor.moveToNext();
@@ -309,36 +335,10 @@ public class ListRowDestinationAdapter extends RecyclerView.Adapter<ListRowDesti
             }
 
             // date of item that temporary comes after
-            Date datePrev = DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(MyContentProvider.Landmarks.DATE_COLUMN)));
+            Date datePrev = DateUtils.databaseStringToDate(cursor.getString(cursor.getColumnIndex(MyContentProvider.Destinations.DATE_COLUMN)));
 
             cursor.moveToNext();
             return DateUtils.isSameDay(dateCurrent, datePrev) ? TYPE_LANDMARK : TYPE_HEADER;
-        }
-    }
-
-    public Cursor swapCursor(Cursor newCursor) {
-        Cursor oldCursor = landmarkCursorAdapter.swapCursor(createCursorWrapper(newCursor));
-        this.notifyDataSetChanged();
-        mCallbackFilterPublishResults.onFilterPublishResults(landmarkCursorAdapter.getCount());
-        return oldCursor;
-    }
-
-    private CursorWrapper createCursorWrapper(Cursor cursor) {
-        if (cursor == null) {
-            return null;
-        }
-
-        if (TextUtils.isEmpty(this.filter)) {
-            return new CursorWrapper(cursor);
-        } else {
-            String[] columnsToSearch = new String[] {
-                    MyContentProvider.Landmarks.TITLE_COLUMN,
-                    MyContentProvider.Landmarks.AUTOMATIC_LOCATION_COLUMN,
-                    MyContentProvider.Landmarks.LOCATION_DESCRIPTION_COLUMN,
-                    MyContentProvider.Landmarks.DESCRIPTION_COLUMN,
-            };
-
-            return new FilterCursorWrapper(cursor, this.filter, columnsToSearch);
         }
     }
 

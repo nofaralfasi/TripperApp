@@ -136,7 +136,7 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
                 return new CursorLoader(getActivity(),
                         MyContentProvider.CONTENT_LANDMARKS_URI,
                         null,
-                        MyContentProvider.Landmarks.TRIP_ID_COLUMN + " =? ",
+                        MyContentProvider.Destinations.TRIP_ID_COLUMN + " =? ",
                         new String[] { Integer.toString(currentTripId) },
                         null);
             }
@@ -457,7 +457,7 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         int gotoLandmarkId = mCallbackGetMoveToDestinationId.onGetMoveToLandmarkId();
         if (gotoLandmarkId != StartActivityUtils.NOT_JUMP_TO_LANDMARK_ID) {
             while (cursor.moveToNext()) {
-                int landmarkId = cursor.getInt(cursor.getColumnIndexOrThrow(MyContentProvider.Landmarks.ID_COLUMN));
+                int landmarkId = cursor.getInt(cursor.getColumnIndexOrThrow(MyContentProvider.Destinations.ID_COLUMN));
                 if (gotoLandmarkId == landmarkId) {
                     landmarksRecyclerView.getLayoutManager().scrollToPosition(cursor.getPosition()); // make it smooth
                 }

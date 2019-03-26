@@ -336,7 +336,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
 
                     case SEARCH_LANDMARK_LOADER_ID: {
                         String[] columnsToSearch = new String[] {
-                                        MyContentProvider.SearchLandmarkResults.LANDMARK_TITLE_COLUMN,
+                                        MyContentProvider.SearchLandmarkResults.DESTINATION_TITLE_COLUMN,
                                         MyContentProvider.SearchLandmarkResults.AUTOMATIC_LOCATION_COLUMN,
                                         MyContentProvider.SearchLandmarkResults.LOCATION_DESCRIPTION_COLUMN,
                                         MyContentProvider.SearchLandmarkResults.DESCRIPTION_COLUMN };
@@ -496,7 +496,7 @@ public class TripsListFragment extends Fragment implements  SearchResultCursorTr
         // delete all the landmarks of the trip
         getActivity().getContentResolver().delete(
                 MyContentProvider.CONTENT_LANDMARKS_URI,
-                MyContentProvider.Landmarks.TRIP_ID_COLUMN + " =? ",
+                MyContentProvider.Destinations.TRIP_ID_COLUMN + " =? ",
                 new String[]{Integer.toString(currentTrip.getId())});
     }
 
