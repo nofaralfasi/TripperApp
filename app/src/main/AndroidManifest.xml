@@ -23,26 +23,29 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:supportsRtl="false"
-        android:theme="@style/KeepTripAppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:supportsRtl="true"
+        android:theme="@style/TripperAppTheme"
+        tools:ignore="GoogleAppIndexingWarning"
+        android:name=".UserClient">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name="com.tripper.tripper.trip.activity.TripActivity"
+        <activity android:name="com.tripper.tripper.trip.activity.TripActivity">
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".destination.activity.DestinationSearchResultActivity" />
+        </activity>
+
+        <activity android:name="com.tripper.tripper.ui.LoginActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".destination.activity.LandmarkSearchResultActivity" />
         </activity>
+
+        <activity android:name=".ui.RegisterActivity" />
+
         <activity
             android:name="com.tripper.tripper.destination.activity.DestinationMainActivity"
             android:excludeFromRecents="true"
@@ -51,7 +54,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
@@ -124,22 +126,7 @@
             android:excludeFromRecents="true"
             android:theme="@style/ThemeForTranslucent"/>
 
-        <!--mySensor and from lecture-->
         <service android:name=".services.MySensor" />
-
-        <activity android:name=".fromLecture.DBMainActivity" />
-
-        <provider
-            android:name=".fromLecture.UsersProvider"
-            android:authorities="com.example.MyApplication.StudentsProvider" />
-        <service android:name=".fromLecture.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <activity android:name=".fromLecture.PushActivity" />
-
 
     </application>
 
