@@ -8,13 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Destination;
-import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.destination.fragment.DestinationDetailsFragment;
 import com.tripper.tripper.destination.fragment.DestinationListFragment;
 import com.tripper.tripper.destination.interfaces.OnGetCurrentDestination;
 import com.tripper.tripper.destination.interfaces.OnGetCurrentTripID;
 import com.tripper.tripper.dialogs.ChangesNotSavedDialogFragment;
+import com.tripper.tripper.models.Destination;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.trip.fragment.TripUpdateFragment;
 import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.utils.ImageUtils;

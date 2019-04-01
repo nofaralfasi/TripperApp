@@ -3,8 +3,8 @@ package com.tripper.tripper.utils;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.destination.activity.DestinationMainActivity;
+import com.tripper.tripper.models.Trip;
 
 public class StartActivityUtils {
     public static final int  NOT_JUMP_TO_LANDMARK_ID = -1;

@@ -1,4 +1,4 @@
-package com.tripper.tripper.core;
+package com.tripper.tripper.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;

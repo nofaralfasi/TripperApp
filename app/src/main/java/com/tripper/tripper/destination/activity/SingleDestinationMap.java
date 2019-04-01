@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Destination;
+import com.tripper.tripper.models.Destination;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.LocationUtils;
 

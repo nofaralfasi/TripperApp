@@ -32,8 +32,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.dialogs.DescriptionDialogFragment;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.utils.DatabaseUtils;

@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ListView;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Destination;
+import com.tripper.tripper.models.Destination;
 
 public class DestinationOptionDialogFragment extends DialogFragment {
 

@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Destination;
+import com.tripper.tripper.models.Destination;
 import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.StartActivityUtils;

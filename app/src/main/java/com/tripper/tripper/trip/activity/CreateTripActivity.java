@@ -1,16 +1,16 @@
  package com.tripper.tripper.trip.activity;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+ import android.os.Bundle;
+ import android.support.v7.app.AppCompatActivity;
+ import android.support.v7.widget.Toolbar;
+ import android.view.MenuItem;
 
-import com.tripper.tripper.R;
-import com.tripper.tripper.dialogs.ChangesNotSavedDialogFragment;
-import com.tripper.tripper.trip.fragment.TripCreateTitleFragment;
-import com.tripper.tripper.core.Trip;
+ import com.tripper.tripper.R;
+ import com.tripper.tripper.dialogs.ChangesNotSavedDialogFragment;
+ import com.tripper.tripper.models.Trip;
+ import com.tripper.tripper.trip.fragment.TripCreateTitleFragment;
 
-import java.util.Date;
+ import java.util.Date;
 
 
  public class CreateTripActivity extends AppCompatActivity implements ChangesNotSavedDialogFragment.OnHandleDialogResult {

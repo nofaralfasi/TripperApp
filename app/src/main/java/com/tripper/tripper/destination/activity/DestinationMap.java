@@ -23,7 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Destination;
+import com.tripper.tripper.models.Destination;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.ImageUtils;
 import com.tripper.tripper.utils.PicassoMarker;

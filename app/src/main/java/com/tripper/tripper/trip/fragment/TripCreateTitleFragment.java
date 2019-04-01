@@ -15,7 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.trip.activity.CreateTripActivity;
 import com.tripper.tripper.utils.DateUtils;
 

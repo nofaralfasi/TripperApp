@@ -6,7 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.services.MyContentProvider;
 
 public class DatabaseUtils {

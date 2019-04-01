@@ -9,7 +9,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;

@@ -40,9 +40,9 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Destination;
-import com.tripper.tripper.core.Trip;
 import com.tripper.tripper.helpers.SettingsActivity;
+import com.tripper.tripper.models.Destination;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.services.MyContentProvider;
 import com.tripper.tripper.trip.activity.CreateTripActivity;
 import com.tripper.tripper.trip.adapter.SearchResultCursorTreeAdapter;

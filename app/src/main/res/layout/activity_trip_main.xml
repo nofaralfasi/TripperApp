@@ -11,6 +11,7 @@
         android:id="@+id/MainToolBar"
         layout="@layout/toolbar"/>
 
+    <!--26.3 disable or not?-->
     <!--<View android:background="@color/toolBarLineBackground"-->
         <!--android:layout_width = "match_parent"-->
         <!--android:layout_height="2dp"/>-->

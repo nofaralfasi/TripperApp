@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tripper.tripper.R;
-import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.trip.interfaces.OnGetCurrentTrip;
 import com.tripper.tripper.utils.DateUtils;
 import com.tripper.tripper.utils.ImageUtils;

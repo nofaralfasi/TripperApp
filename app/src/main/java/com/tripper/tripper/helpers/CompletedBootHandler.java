@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.tripper.tripper.core.Trip;
+import com.tripper.tripper.models.Trip;
 import com.tripper.tripper.utils.DatabaseUtils;
 import com.tripper.tripper.utils.NotificationUtils;
 import com.tripper.tripper.utils.SharedPreferencesUtils;
