@@ -114,7 +114,7 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
                     break;
                 }
                 else {
-                    Toast.makeText(this, getResources().getString(R.string.toast_landmark_added_message_fail), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_destination_added_message_fail), Toast.LENGTH_SHORT).show();
                     finishAffinity();
                 }
         }
@@ -123,7 +123,7 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
     private void completeAdding(String currentLocationName, Location currentLocation){
 //        String currentLocationName = LocationUtils.updateLmLocationString(this, currentLocation);
         Trip lastTrip = DatabaseUtils.getLastTrip(this);
-        String title = (currentLocationName == null || currentLocationName.trim().isEmpty()) ? getResources().getString(R.string.location_landmark_default_title) : currentLocationName;
+        String title = (currentLocationName == null || currentLocationName.trim().isEmpty()) ? getResources().getString(R.string.location_destination_default_title) : currentLocationName;
         Destination newDestination = new Destination(lastTrip.getId(), title,
                 "", DateUtils.getDateOfToday(), currentLocationName, currentLocation, "", "", 0);
 
@@ -132,7 +132,7 @@ public class WidgetLocationActivity extends Activity implements NoTripsDialogFra
                 MyContentProvider.CONTENT_LANDMARKS_URI,
                 newDestination.landmarkToContentValues());
 
-        Toast.makeText(this, getResources().getString(R.string.toast_location_landmark_added_message_success, title, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_location_destination_added_message_success, title, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
         finishAffinity();
     }
 

@@ -48,7 +48,7 @@ public class NotificationUtils {
         NotificationCompat.Action addLandmarkAction =
                 new NotificationCompat.Action.Builder(
                         R.drawable.ic_add_black_24dp,
-                        context.getString(R.string.notification_add_landmark),
+                        context.getString(R.string.notification_add_destination),
                         resultPendingIntentAddLandmark)
                         .build();
 

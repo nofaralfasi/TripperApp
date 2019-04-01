@@ -38,7 +38,7 @@ public class DestinationMultiMap extends DestinationMap {
         LatLng landmarkLatLng = null;
 
         if (lmArrayList.isEmpty()){
-            Toast.makeText(this, R.string.no_landmarks_to_view, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_destinations_to_view, Toast.LENGTH_LONG).show();
             Toast.makeText(this, R.string.make_sure_gps_enabled_or_map, Toast.LENGTH_LONG).show();
             return;
         }
@@ -69,7 +69,7 @@ public class DestinationMultiMap extends DestinationMap {
         } while (index < lmArrayList.size());
 
         if(landmarkLatLng == null){
-            Toast.makeText(this, R.string.no_landmarks_with_location_found, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_destinations_with_location_found, Toast.LENGTH_LONG).show();
             Toast.makeText(this, R.string.make_sure_gps_enabled_or_map, Toast.LENGTH_LONG).show();
         }else {
 

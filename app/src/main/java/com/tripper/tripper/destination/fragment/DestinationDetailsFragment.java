@@ -275,7 +275,7 @@ public class DestinationDetailsFragment extends Fragment implements
 
 
         // update the toolbar title.
-        int toolBarStringRes = isCalledFromUpdateLandmark ? R.string.landmark_update_landmark_toolbar_title : R.string.landmark_create_new_landmark_toolbar_title;
+        int toolBarStringRes = isCalledFromUpdateLandmark ? R.string.destination_update_destination_toolbar_title : R.string.destination_create_new_destination_toolbar_title;
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(getResources().getString(toolBarStringRes));
         actionBar.show();
@@ -427,20 +427,20 @@ public class DestinationDetailsFragment extends Fragment implements
             public void onClick(View v) {
                 if (lmTitleEditText.getText().toString().trim().isEmpty() && (currentLmPhotoPath == null || currentLmPhotoPath.isEmpty())) {
                     lmTitleEditText.requestFocus();
-                    lmTitleEditText.setError(getResources().getString(R.string.landmark_no_title_or_photo_error_message));
+                    lmTitleEditText.setError(getResources().getString(R.string.destination_no_title_or_photo_error_message));
                 }
                 else {
                     if (isCalledFromGallery || isCalledFromNotification) {
                         if(createAndInsertNewLandmark()) {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_landmark_added_message_success), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_destination_added_message_success), Toast.LENGTH_LONG).show();
                             getActivity().finishAffinity();
                         }
                         else {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_landmark_added_message_fail), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_destination_added_message_fail), Toast.LENGTH_LONG).show();
                         }
                     } else if(!isCalledFromUpdateLandmark) {
                         if(!createAndInsertNewLandmark()){
-                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_landmark_added_message_fail), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_destination_added_message_fail), Toast.LENGTH_LONG).show();
                         }
                         else {
                             getFragmentManager().popBackStackImmediate();
@@ -514,7 +514,7 @@ public class DestinationDetailsFragment extends Fragment implements
                 }
                 isRealAutomaticLocation = false;
                 if(isAdded()){
-                    lmAutomaticLocationTextView.setText(TextUtils.concat(getResources().getString(R.string.landmark_details_automatic_location_loading_text) ,loadingAppendText[values[0]%3]));
+                    lmAutomaticLocationTextView.setText(TextUtils.concat(getResources().getString(R.string.destination_details_automatic_location_loading_text), loadingAppendText[values[0] % 3]));
                     handler.postDelayed(r, 400);
                 }
             }
@@ -632,7 +632,7 @@ public class DestinationDetailsFragment extends Fragment implements
 
     private void initLmSpinner(View parentView, Bundle savedInstanceState) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(parentView.getContext(),
-                R.array.landmark_details_type_spinner_array, R.layout.destination_details_spinner_item);
+                R.array.destination_details_type_spinner_array, R.layout.destination_details_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lmTypeSpinner.setAdapter(adapter);
         if (savedInstanceState == null){
@@ -782,17 +782,17 @@ public class DestinationDetailsFragment extends Fragment implements
 //    }
 
     private void handleUnavailableLocationMessage(TextView textView, TextView errorTextView){
-        String locationUnAvailableMessage = "<i>" + getResources().getString(R.string.landmark_location_is_unavailable) + "</i>";
+        String locationUnAvailableMessage = "<i>" + getResources().getString(R.string.destination_location_is_unavailable) + "</i>";
         textView.setText(Html.fromHtml(locationUnAvailableMessage));
         if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || !LocationUtils.checkPlayServices(getActivity(), false)){
-            errorTextView.setText(getResources().getString(R.string.landmark_sub_gps_no_permissions_message));
+            errorTextView.setText(getResources().getString(R.string.destination_sub_gps_no_permissions_message));
         }
         else { // gps permission was granted
             if (isCalledFromUpdateLandmark) {
-                errorTextView.setText(getResources().getString(R.string.landmark_sub_gps_on_update_message));
+                errorTextView.setText(getResources().getString(R.string.destination_sub_gps_on_update_message));
             } else {
-                errorTextView.setText(getResources().getString(R.string.landmark_sub_gps_message));
+                errorTextView.setText(getResources().getString(R.string.destination_sub_gps_message));
             }
         }
         errorTextView.setVisibility(View.VISIBLE);
@@ -805,7 +805,7 @@ public class DestinationDetailsFragment extends Fragment implements
 
             if(locationText.equals(LocationUtils.locationToLatLngString(getActivity(), location))) {
                 if(!LocationUtils.IsNetworkEnabled(getActivity())) {
-                    errorTextView.setText(getResources().getString(R.string.landmark_sub_network_message));
+                    errorTextView.setText(getResources().getString(R.string.destination_sub_network_message));
                     errorTextView.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -814,7 +814,7 @@ public class DestinationDetailsFragment extends Fragment implements
                 return isResultOk;
             }
 
-            if(locationText.equals(getResources().getString(R.string.landmark_location_is_unavailable))){
+            if (locationText.equals(getResources().getString(R.string.destination_location_is_unavailable))) {
                 handleUnavailableLocationMessage(textView, errorTextView);
                 return isResultOk;
             }
@@ -825,7 +825,7 @@ public class DestinationDetailsFragment extends Fragment implements
             if(location != null){
                 textView.setText(LocationUtils.locationToLatLngString(getActivity(), location));
                 if(!LocationUtils.IsNetworkEnabled(getActivity())) {
-                    errorTextView.setText(getResources().getString(R.string.landmark_sub_network_message));
+                    errorTextView.setText(getResources().getString(R.string.destination_sub_network_message));
                     errorTextView.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -963,7 +963,7 @@ public class DestinationDetailsFragment extends Fragment implements
                     }
                 } else {
                     if(isCalledFromGallery){
-                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.toast_landmark_added_from_gallery_no_permission), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.toast_destination_added_from_gallery_no_permission), Toast.LENGTH_SHORT).show();
                         getActivity().finishAffinity();
                     }
                     else {
@@ -1008,11 +1008,11 @@ public class DestinationDetailsFragment extends Fragment implements
     }
 
     private void initDialogs() {
-        String[] dialogOptionsArray = getResources().getStringArray(R.array.landmark_details_photo_dialog_options);
+        String[] dialogOptionsArray = getResources().getStringArray(R.array.destination_details_photo_dialog_options);
 
         // Use the Builder class for convenient dialog construction
         optionsDialogBuilder = new AlertDialog.Builder(getActivity());
-        optionsDialogBuilder.setTitle(R.string.landmark_details_photo_dialog);
+        optionsDialogBuilder.setTitle(R.string.destination_details_photo_dialog);
         optionsDialogBuilder.setItems(dialogOptionsArray, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int position) {

@@ -7,13 +7,13 @@
     <TextView
         android:id="@+id/landmarks_add_trips_when_empty_text_view"
         style="@style/TextViewWhenListEmptyMessageStyle"
-        android:text="@string/landmarks_add_trips_when_empty_message"
+        android:text="@string/destinations_add_trips_when_empty_message"
         />
 
     <TextView
         android:id="@+id/landmarks_no_results_found_text_view"
         style="@style/TextViewNoSearchResultsFoundMessageStyle"
-        android:text="@string/landmarks_no_search_results_message"
+        android:text="@string/destinations_no_search_results_message"
         />
 
     <ProgressBar

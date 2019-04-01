@@ -32,7 +32,7 @@ public class DestinationOptionDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        dialogOptionsArray = getResources().getStringArray(R.array.landmarks_settings_dialog_options);
+        dialogOptionsArray = getResources().getStringArray(R.array.destinations_settings_dialog_options);
 //        Bundle mArgs = getArguments();
 //        currentDestination = mArgs.getParcelable(CUR_LANDMARK_PARAM);
 
@@ -48,7 +48,7 @@ public class DestinationOptionDialogFragment extends DialogFragment {
                 getTargetFragment().onActivityResult(getTargetRequestCode(), getActivity().RESULT_OK, resultIntent);
             }
         });
-        optionsDialogBuilder.setTitle(R.string.landmark_options_dialog_title);
+        optionsDialogBuilder.setTitle(R.string.destination_options_dialog_title);
 
         optionsDialog = optionsDialogBuilder.create();
         ListView listView = optionsDialog.getListView();

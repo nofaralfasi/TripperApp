@@ -24,14 +24,14 @@
 
     <item
         android:id="@+id/show_quick_landmarks_option_item"
-        android:title="@string/show_quick_landmarks_option_item_title"
+        android:title="@string/show_quick_destinations_option_item_title"
         android:visible="false"
         app:showAsAction="never">
     </item>
 
     <item
         android:id="@+id/hide_quick_landmarks_option_item"
-        android:title="@string/hide_quick_landmarks_option_item_title"
+        android:title="@string/hide_quick_destinations_option_item_title"
         android:visible="false"
         app:showAsAction="never">
     </item>

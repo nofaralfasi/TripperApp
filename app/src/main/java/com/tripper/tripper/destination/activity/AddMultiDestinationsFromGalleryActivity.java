@@ -116,7 +116,7 @@ public class AddMultiDestinationsFromGalleryActivity extends Activity implements
                 super.onPostExecute(aVoid);
 
                 progressDialog.dismiss();
-                Toast.makeText(AddMultiDestinationsFromGalleryActivity.this, getResources().getString(R.string.toast_landmarks_added_message_success, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMultiDestinationsFromGalleryActivity.this, getResources().getString(R.string.toast_destinations_added_message_success, lastTrip.getTitle()), Toast.LENGTH_SHORT).show();
                 finishAffinity();
             }
 
@@ -161,8 +161,8 @@ public class AddMultiDestinationsFromGalleryActivity extends Activity implements
         progressDialog.setProgress(currentImageIndex);
 
         // Set the progress dialog title and message
-        progressDialog.setTitle(getResources().getString(R.string.toast_add_landmark_progress_dialog_title));
-        progressDialog.setMessage(getResources().getString(R.string.toast_add_landmark_progress_dialog_message));
+        progressDialog.setTitle(getResources().getString(R.string.toast_add_destination_progress_dialog_title));
+        progressDialog.setMessage(getResources().getString(R.string.toast_add_destination_progress_dialog_message));
 
         // Set the progress dialog background color
         progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -200,7 +200,7 @@ public class AddMultiDestinationsFromGalleryActivity extends Activity implements
                         == PackageManager.PERMISSION_GRANTED) {
                     handleSendMultipleImages();
                 } else {
-                    Toast.makeText(this, getResources().getString(R.string.toast_landmark_added_from_gallery_no_permission), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_destination_added_from_gallery_no_permission), Toast.LENGTH_SHORT).show();
                     finishAffinity();
                 }
                 break;

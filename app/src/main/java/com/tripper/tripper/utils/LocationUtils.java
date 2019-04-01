@@ -61,7 +61,7 @@ public class LocationUtils{
         DecimalFormat f = new DecimalFormat("###.000000");
         if (location != null){
             locationString = context.getResources().getString(
-                    R.string.landmark_gps_location_string,
+                    R.string.destination_gps_location_string,
                     f.format(location.getLatitude()),
                     f.format(location.getLongitude()));
         }

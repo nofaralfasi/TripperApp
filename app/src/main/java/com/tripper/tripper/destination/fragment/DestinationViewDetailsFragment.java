@@ -77,7 +77,7 @@ public class DestinationViewDetailsFragment extends Fragment {
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.show();
-        actionBar.setTitle(getResources().getString(R.string.landmark_view_details_toolbar_title));
+        actionBar.setTitle(getResources().getString(R.string.destination_view_details_toolbar_title));
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(false);
@@ -129,7 +129,7 @@ public class DestinationViewDetailsFragment extends Fragment {
     // Update Destination , need to update Destination Parameters
     private void updateLmParameters() {
 
-        String[] type = getResources().getStringArray(R.array.landmark_details_type_spinner_array);
+        String[] type = getResources().getStringArray(R.array.destination_details_type_spinner_array);
         TypedArray iconType = getResources().obtainTypedArray(R.array.landmark_view_details_icon_type_array);
         String automaticLocation = currentDestination.getAutomaticLocation();
         if(automaticLocation == null){

@@ -248,7 +248,7 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
                         onOpenLandmarkDetailsForUpdate();
                         break;
                     case DELETE:
-                        destinationDeleteDialogConfirm.setMessage(getResources().getString(R.string.landmark_delete_warning_dialog_message));
+                        destinationDeleteDialogConfirm.setMessage(getResources().getString(R.string.destination_delete_warning_dialog_message));
                         destinationDeleteDialogConfirm.show();
                         break;
                     case VIEW:
@@ -263,14 +263,14 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         // Use the Builder class for convenient dialog construction
         destinationDeleteDialogConfirm = new AlertDialog.Builder(getActivity())
                 //set message, title, and icon
-                .setTitle(getResources().getString(R.string.landmark_delete_warning_dialog_title))
-                .setPositiveButton(getResources().getString(R.string.landmark_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
+                .setTitle(getResources().getString(R.string.destination_delete_warning_dialog_title))
+                .setPositiveButton(getResources().getString(R.string.destination_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         onDeleteLandmarkDialog();
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(getResources().getString(R.string.landmark_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.destination_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -279,15 +279,15 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
 
         multipleDestinationDeleteDialogConfirm = new AlertDialog.Builder(getActivity())
                 //set message, title, and icon
-                .setTitle(getResources().getString(R.string.landmark_multiple_delete_warning_dialog_title))
-                .setPositiveButton(getResources().getString(R.string.landmark_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
+                .setTitle(getResources().getString(R.string.destination_multiple_delete_warning_dialog_title))
+                .setPositiveButton(getResources().getString(R.string.destination_delete_warning_dialog_delete_label), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         onDeleteMultipleLandmarks();
                         dialog.dismiss();
                         listRowDestinationAdapter.handleFinishActionMode();
                     }
                 })
-                .setNegativeButton(getResources().getString(R.string.landmark_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.destination_delete_warning_dialog_cancel_label), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -438,7 +438,7 @@ public class DestinationListFragment extends Fragment implements ListRowDestinat
         }
         switch (id) {
             case R.id.multiple_select_action_delete:
-                multipleDestinationDeleteDialogConfirm.setMessage(getResources().getString(R.string.landmark_multiple_delete_warning_dialog_message));
+                multipleDestinationDeleteDialogConfirm.setMessage(getResources().getString(R.string.destination_multiple_delete_warning_dialog_message));
                 multipleDestinationDeleteDialogConfirm.show();
                 break;
             case R.id.multiple_select_action_edit:
